@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateGeoUnidadesTransporteDto } from './dto/create-geo_unidades-transporte.dto';
+import { GeoUnidadesTransporte } from './entities/geo_unidades-transporte.entity';
 import { UpdateGeoUnidadesTransporteDto } from './dto/update-geo_unidades-transporte.dto';
 
 @Injectable()
 export class GeoUnidadesTransporteService {
-  create(createGeoUnidadesTransporteDto: CreateGeoUnidadesTransporteDto) {
-    return 'This action adds a new geoUnidadesTransporte';
+  constructor(
+    @InjectRepository(GeoUnidadesTransporte)
+    private readonly repo: Repository<GeoUnidadesTransporte>,
+  ) {}
+
+  create(dto: CreateGeoUnidadesTransporteDto) {
+    const unidad = this.repo.create(dto);
+    return this.repo.save(unidad);
   }
 
   findAll() {
-    return `This action returns all geoUnidadesTransporte`;
+    return this.repo.find({ relations: ['tipoUnidad'] });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} geoUnidadesTransporte`;
+    return this.repo.findOne({
+      where: { idUnidadTransporte: id },
+      relations: ['tipoUnidad'],
+    });
   }
 
-  update(id: number, updateGeoUnidadesTransporteDto: UpdateGeoUnidadesTransporteDto) {
-    return `This action updates a #${id} geoUnidadesTransporte`;
+  update(id: number, dto: UpdateGeoUnidadesTransporteDto) {
+    return this.repo.update(id, dto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} geoUnidadesTransporte`;
+    return this.repo.delete(id);
   }
 }
