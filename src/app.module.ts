@@ -5,6 +5,7 @@ import { GeoRutasModule } from './app/geo_rutas/geo_rutas.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from 'dotenv'; 
 import { GeoRutasDetalleModule } from './app/geo_rutas-detalle/geo_rutas-detalle.module';
+import { GeoTipoServiciosModule } from './app/geo_tipo-servicios/geo_tipo-servicios.module';
 config(); // Cargar variables de entorno desde .env
 
 @Module({
@@ -30,6 +31,7 @@ config(); // Cargar variables de entorno desde .env
 
     GeoRutasModule,
     GeoRutasDetalleModule,
+    GeoTipoServiciosModule,
   ],
 
   controllers: [AppController],

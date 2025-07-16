@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { GeoTipoServiciosService } from './geo_tipo-servicios.service';
 import { CreateGeoTipoServicioDto } from './dto/create-geo_tipo-servicio.dto';
 import { UpdateGeoTipoServicioDto } from './dto/update-geo_tipo-servicio.dto';
@@ -8,8 +8,8 @@ export class GeoTipoServiciosController {
   constructor(private readonly geoTipoServiciosService: GeoTipoServiciosService) {}
 
   @Post()
-  create(@Body() createGeoTipoServicioDto: CreateGeoTipoServicioDto) {
-    return this.geoTipoServiciosService.create(createGeoTipoServicioDto);
+  create(@Body() createDto: CreateGeoTipoServicioDto) {
+    return this.geoTipoServiciosService.create(createDto);
   }
 
   @Get()
@@ -18,17 +18,17 @@ export class GeoTipoServiciosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.geoTipoServiciosService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.geoTipoServiciosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGeoTipoServicioDto: UpdateGeoTipoServicioDto) {
-    return this.geoTipoServiciosService.update(+id, updateGeoTipoServicioDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateGeoTipoServicioDto) {
+    return this.geoTipoServiciosService.update(id, updateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.geoTipoServiciosService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.geoTipoServiciosService.remove(id);
   }
 }
