@@ -3,13 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GeoRutasModule } from './app/geo_rutas/geo_rutas.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { config } from 'dotenv'; 
+import { config } from 'dotenv';
 import { GeoRutasDetalleModule } from './app/geo_rutas-detalle/geo_rutas-detalle.module';
 import { GeoTipoServiciosModule } from './app/geo_tipo-servicios/geo_tipo-servicios.module';
+import { GeoClientesModule } from './app/geo_clientes/geo_clientes.module';
 config(); // Cargar variables de entorno desde .env
 
 @Module({
-    imports: [
+  imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -18,9 +19,8 @@ config(); // Cargar variables de entorno desde .env
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      
-      synchronize: true, // Solo para desarrollo, no usar en producción
 
+      synchronize: true, // Solo para desarrollo, no usar en producción
 
       extra: {
         connectionLimit: 10,
@@ -34,7 +34,7 @@ config(); // Cargar variables de entorno desde .env
     GeoRutasDetalleModule,
     GeoTipoServiciosModule,
     GeoRutasModule,
-
+    GeoClientesModule,
   ],
 
   controllers: [AppController],

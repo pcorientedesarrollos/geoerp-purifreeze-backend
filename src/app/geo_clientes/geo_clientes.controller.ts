@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { GeoClientesService } from './geo_clientes.service';
 import { CreateGeoClienteDto } from './dto/create-geo_cliente.dto';
 import { UpdateGeoClienteDto } from './dto/update-geo_cliente.dto';
@@ -23,7 +31,10 @@ export class GeoClientesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGeoClienteDto: UpdateGeoClienteDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateGeoClienteDto: UpdateGeoClienteDto,
+  ) {
     return this.geoClientesService.update(+id, updateGeoClienteDto);
   }
 

@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGeoClienteDto } from './dto/create-geo_cliente.dto';
+
 import { UpdateGeoClienteDto } from './dto/update-geo_cliente.dto';
+import { GeoCliente } from './entities/geo_cliente.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateGeoClienteDto } from './dto/create-geo_cliente.dto';
 
 @Injectable()
 export class GeoClientesService {
-  create(createGeoClienteDto: CreateGeoClienteDto) {
-    return 'This action adds a new geoCliente';
+  constructor(
+    @InjectRepository(GeoCliente)
+    private readonly clienteRepository: Repository<GeoCliente>,
+  ) {}
+
+  create(createDto: CreateGeoClienteDto) {
+    const nuevo = this.clienteRepository.create(createDto);
+    return this.clienteRepository.save(nuevo);
   }
 
   findAll() {
-    return `This action returns all geoClientes`;
+    return this.clienteRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} geoCliente`;
+    return this.clienteRepository.findOne({ where: { idcliente: id } });
   }
 
-  update(id: number, updateGeoClienteDto: UpdateGeoClienteDto) {
-    return `This action updates a #${id} geoCliente`;
+  update(id: number, updateDto: UpdateGeoClienteDto) {
+    return this.clienteRepository.update(id, updateDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} geoCliente`;
+    return this.clienteRepository.delete(id);
   }
 }
