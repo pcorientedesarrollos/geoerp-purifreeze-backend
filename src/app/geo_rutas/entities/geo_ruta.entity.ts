@@ -21,5 +21,5 @@ export class GeoRutaEntity {
   fecha_hora: Date;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  kmlInicial: string;
+  kmInicial: string;
 }

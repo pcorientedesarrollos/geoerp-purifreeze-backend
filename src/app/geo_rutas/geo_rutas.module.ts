@@ -6,7 +6,7 @@ import { GeoRutaEntity } from './entities/geo_ruta.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([GeoRutaEntity]) // Importante: Registra la entidad
+    TypeOrmModule.forFeature([GeoRutaEntity])
   ],
   controllers: [GeoRutasController],
   providers: [GeoRutasService],
