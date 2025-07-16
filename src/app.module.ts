@@ -31,7 +31,10 @@ config(); // Cargar variables de entorno desde .env
 
     GeoRutasModule,
     GeoRutasDetalleModule,
+    GeoRutasDetalleModule,
     GeoTipoServiciosModule,
+    GeoRutasModule,
+
   ],
 
   controllers: [AppController],
