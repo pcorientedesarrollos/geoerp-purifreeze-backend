@@ -22,6 +22,6 @@ export class CreateGeoRutaDto {
   fecha_hora: Date;
 
   @IsString()
-  @IsOptional()
-  kmInicial?: string;
+  @IsNotEmpty()
+  kmInicial: string;
 }
