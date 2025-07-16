@@ -1,15 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { GeoRutasDetalleService } from './geo_rutas-detalle.service';
-import { CreateGeoRutasDetalleDto } from './dto/create-geo_rutas-detalle.dto';
-import { UpdateGeoRutasDetalleDto } from './dto/update-geo_rutas-detalle.dto';
+import { CreateGeoRutaDetalleDto } from './dto/create-geo_rutas-detalle.dto';
+import { UpdateGeoRutaDetalleDto } from './dto/update-geo_rutas-detalle.dto';
 
 @Controller('geo-rutas-detalle')
 export class GeoRutasDetalleController {
   constructor(private readonly geoRutasDetalleService: GeoRutasDetalleService) {}
 
   @Post()
-  create(@Body() createGeoRutasDetalleDto: CreateGeoRutasDetalleDto) {
-    return this.geoRutasDetalleService.create(createGeoRutasDetalleDto);
+  create(@Body() createDto: CreateGeoRutaDetalleDto) {
+    return this.geoRutasDetalleService.create(createDto);
   }
 
   @Get()
@@ -18,17 +18,17 @@ export class GeoRutasDetalleController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.geoRutasDetalleService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.geoRutasDetalleService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGeoRutasDetalleDto: UpdateGeoRutasDetalleDto) {
-    return this.geoRutasDetalleService.update(+id, updateGeoRutasDetalleDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateGeoRutaDetalleDto) {
+    return this.geoRutasDetalleService.update(id, updateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.geoRutasDetalleService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.geoRutasDetalleService.remove(id);
   }
 }
