@@ -1,26 +1,35 @@
+import { GeoTipoUnidade } from './entities/geo_tipo-unidade.entity';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateGeoTipoUnidadeDto } from './dto/create-geo_tipo-unidade.dto';
 import { UpdateGeoTipoUnidadeDto } from './dto/update-geo_tipo-unidade.dto';
 
 @Injectable()
 export class GeoTipoUnidadesService {
+  constructor(
+    @InjectRepository(GeoTipoUnidade)
+    private readonly repo: Repository<GeoTipoUnidade>,
+  ) {}
+
   create(createGeoTipoUnidadeDto: CreateGeoTipoUnidadeDto) {
-    return 'This action adds a new geoTipoUnidade';
+    const nuevo = this.repo.create(createGeoTipoUnidadeDto);
+    return this.repo.save(nuevo);
   }
 
   findAll() {
-    return `This action returns all geoTipoUnidades`;
+    return this.repo.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} geoTipoUnidade`;
+    return this.repo.findOneBy({ idTipoUnidad: id });
   }
 
   update(id: number, updateGeoTipoUnidadeDto: UpdateGeoTipoUnidadeDto) {
-    return `This action updates a #${id} geoTipoUnidade`;
+    return this.repo.update(id, updateGeoTipoUnidadeDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} geoTipoUnidade`;
+    return this.repo.delete(id);
   }
 }
