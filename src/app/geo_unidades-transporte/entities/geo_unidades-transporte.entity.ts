@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('geo_unidadesTransporte')
+@Entity('geo_unidadTransporte')
 export class GeoUnidadesTransporte {
   @PrimaryGeneratedColumn()
   idUnidadTransporte: number;
@@ -19,6 +19,9 @@ export class GeoUnidadesTransporte {
   @ManyToOne(() => GeoTipoUnidade)
   @JoinColumn({ name: 'idTipoUnidad' })
   tipoUnidad: GeoTipoUnidade;
+
+  @Column()
+  nombreUnidad: string;
 
   @Column()
   placaUnidad: string;

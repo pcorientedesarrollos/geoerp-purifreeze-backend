@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-@Entity('geo_tiposUnidades')
+@Entity('geo_tipoUnidades')
 export class GeoTipoUnidade {
   @PrimaryGeneratedColumn()
   idTipoUnidad: number;
