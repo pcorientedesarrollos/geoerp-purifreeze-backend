@@ -7,6 +7,8 @@ import { config } from 'dotenv';
 import { GeoRutasDetalleModule } from './app/geo_rutas-detalle/geo_rutas-detalle.module';
 import { GeoTipoServiciosModule } from './app/geo_tipo-servicios/geo_tipo-servicios.module';
 import { GeoClientesModule } from './app/geo_clientes/geo_clientes.module';
+import { GeoUnidadesTransporte } from './app/geo_unidades-transporte/entities/geo_unidades-transporte.entity';
+import { GeoUnidadesTransporteModule } from './app/geo_unidades-transporte/geo_unidades-transporte.module';
 config(); // Cargar variables de entorno desde .env
 
 @Module({
@@ -31,7 +33,7 @@ config(); // Cargar variables de entorno desde .env
 
     GeoRutasModule,
     GeoRutasDetalleModule,
-    GeoRutasDetalleModule,
+    GeoUnidadesTransporteModule,
     GeoTipoServiciosModule,
     GeoRutasModule,
     GeoClientesModule,
