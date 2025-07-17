@@ -12,6 +12,7 @@ import { GeoClientesModule } from './app/geo_clientes/geo_clientes.module';
 import { GeoRutasModule } from './app/geo_rutas/geo_rutas.module';
 import { GeoRutasDetalleModule } from './app/geo_rutas-detalle/geo_rutas-detalle.module';
 import { GeoTipoServiciosModule } from './app/geo_tipo-servicios/geo_tipo-servicios.module';
+import { GeoUnidadesTransporteModule } from './app/geo_unidades-transporte/geo_unidades-transporte.module';
 
 config();
 
@@ -39,6 +40,7 @@ config();
     GeoClientesModule,
     GeoRutasModule,
     GeoRutasDetalleModule,
+    GeoUnidadesTransporteModule,
     GeoTipoServiciosModule,
   ],
 
