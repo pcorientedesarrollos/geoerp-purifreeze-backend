@@ -10,9 +10,18 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
-
+  async findOneById(id: number): Promise<User | null> {
+    return this.usersRepository.findOneBy({ idUsuario: id });
+  }
   async findOneByUsername(username: string): Promise<User | null> {
     return this.usersRepository.findOneBy({ usuario: username });
+    // Si no se encuentra un usuario con ese nombre de usuario, devuelve null
+  }
+  async registerFace(userId: number, descriptor: number[]): Promise<void> {
+    const descriptorJson = JSON.stringify(descriptor);
+    await this.usersRepository.update(userId, {
+      descriptor_facial: descriptorJson,
+    });
   }
   async findUsersForFacialLogin(): Promise<
     { idUsuario: number; descriptor_facial: string }[]

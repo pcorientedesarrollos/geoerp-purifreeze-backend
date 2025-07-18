@@ -34,4 +34,12 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+  async loginByUserId(userId: number) {
+    const user = await this.usersService.findOneById(userId);
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado.');
+    }
+    // Reutilizamos el método de login que ya teníamos
+    return this.login(user);
+  }
 }

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { LoginByUserIdDto } from './dto/login-by-userid.dto';
 
 // Importamos nuestro DTO
 
@@ -35,5 +36,10 @@ export class AuthController {
 
     // 3. Si las credenciales son correctas, usamos el servicio para generar y devolver el token
     return this.authService.login(user);
+  }
+  @Post('login-by-userid')
+  @HttpCode(HttpStatus.OK)
+  async loginByUserId(@Body() loginByUserIdDto: LoginByUserIdDto) {
+    return this.authService.loginByUserId(loginByUserIdDto.userId);
   }
 }

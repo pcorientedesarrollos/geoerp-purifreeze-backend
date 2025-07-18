@@ -5,6 +5,7 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from 'src/app/users/users.module';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { UsersModule } from 'src/app/users/users.module';
       signOptions: { expiresIn: '1d' }, // El token expirará en 1 día
     }),
   ],
-  providers: [AuthService], // Añadiremos más providers después
+  providers: [AuthService, JwtStrategy], // Añadiremos más providers después
   controllers: [AuthController],
 })
 export class AuthModule {}
