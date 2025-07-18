@@ -1,7 +1,8 @@
+// src/app/users/users.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './entities/user.entity'; // Asegúrate de que la ruta a tu entidad sea correcta
+import { IsNull, Not, Repository } from 'typeorm'; // <-- AÑADE Not y IsNull
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -10,9 +11,19 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  // CAMBIO: La función ahora promete devolver User | null, que es lo correcto.
   async findOneByUsername(username: string): Promise<User | null> {
-    // El código de abajo ya devuelve User | null, así que ahora todo coincide.
     return this.usersRepository.findOneBy({ usuario: username });
   }
+  async findUsersForFacialLogin(): Promise<
+    { idUsuario: number; descriptor_facial: string }[]
+  > {
+    return this.usersRepository.find({
+      select: ['idUsuario', 'descriptor_facial'], // Seleccionamos solo las columnas que nos interesan
+      where: {
+        descriptor_facial: Not(IsNull()),
+      },
+    });
+  }
+  // --- MÉTODO NUEVO A AÑADIR ---
+  // Busca en la BD todos los usuarios cuyo campo 'descriptor_facial' no sea nulo.
 }

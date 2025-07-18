@@ -1,9 +1,13 @@
-import { Controller } from '@nestjs/common';
+// src/app/users/users.controller.ts
+import { Controller, Get } from '@nestjs/common'; // Asegúrate de importar Get
 import { UsersService } from './users.service';
 
-@Controller('users') // La ruta base sigue siendo /users
+@Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // No hay más métodos por ahora. ¡Limpio y sin errores!
+  @Get('facial-login-data') // La ruta será GET /users/facial-login-data
+  async getUsersForFacialLogin() {
+    return this.usersService.findUsersForFacialLogin();
+  }
 }
