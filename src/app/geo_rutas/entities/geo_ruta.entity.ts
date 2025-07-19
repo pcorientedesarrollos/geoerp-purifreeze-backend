@@ -1,11 +1,9 @@
-// ... otras importaciones
-import { GeoRutaDetalleEntity } from 'src/app/geo_rutas-detalle/entities/geo_rutas-detalle.entity';
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-
+import { GeoRutaDetalleEntity } from '../../geo_rutas-detalle/entities/geo_rutas-detalle.entity';
+import { GeoRutasParadaEntity } from 'src/app/geo-rutas-paradas/entities/geo-rutas-parada.entity';
 
 @Entity('geo_rutas')
 export class GeoRutaEntity {
-  // ... todas las columnas que ya tenías (idRuta, idUsuario, etc.)
   @PrimaryGeneratedColumn()
   idRuta: number;
 
@@ -13,13 +11,7 @@ export class GeoRutaEntity {
   idUsuario: number;
 
   @Column({ type: 'int' })
-  idCliente: number;
-
-  @Column({ type: 'int' })
   idUnidadTransporte: number;
-
-  @Column({ type: 'int' })
-  idTipoServicio: number;
 
   @Column({ type: 'datetime' })
   fecha_hora: Date;
@@ -27,10 +19,14 @@ export class GeoRutaEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   kmlInicial: string;
 
-  // --- NUEVA RELACIÓN AÑADIDA ---
-  // Relación: UNA ruta tiene MUCHOS detalles.
-  @OneToMany(() => GeoRutaDetalleEntity, (detalle) => detalle.ruta, {
-    cascade: true, // Permite guardar detalles junto con la ruta.
+  // --- CAMBIO 2: Usar el nombre de clase correcto en la relación ---
+  @OneToMany(() => GeoRutasParadaEntity, (parada) => parada.ruta, {
+    cascade: true,
   })
+  // --- CAMBIO 3: Usar el tipo correcto para la propiedad del arreglo ---
+  paradas: GeoRutasParadaEntity[];
+
+  // Relación con Detalles (Rastreo GPS) - Esta ya estaba bien
+  @OneToMany(() => GeoRutaDetalleEntity, (detalle) => detalle.ruta)
   detalles: GeoRutaDetalleEntity[];
 }
