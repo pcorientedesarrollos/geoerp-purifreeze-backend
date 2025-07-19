@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
-import { CreateGeoClientesDireccionDto } from './dto/create-geo_clientes-direccion.dto';
-import { UpdateGeoClientesDireccionDto } from './dto/update-geo_clientes-direccion.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { GeoClienteDireccionEntity } from './entities/geo_clientes-direccion.entity';
+import { CreateGeoClienteDireccionDto } from './dto/create-geo_clientes-direccion.dto';
+import { UpdateGeoClienteDireccionDto } from './dto/update-geo_clientes-direccion.dto';
 
 @Injectable()
 export class GeoClientesDireccionService {
-  create(createGeoClientesDireccionDto: CreateGeoClientesDireccionDto) {
-    return 'This action adds a new geoClientesDireccion';
+  constructor(
+    @InjectRepository(GeoClienteDireccionEntity)
+    private readonly direccionRepository: Repository<GeoClienteDireccionEntity>,
+  ) {}
+
+  create(createDto: CreateGeoClienteDireccionDto): Promise<GeoClienteDireccionEntity> {
+    const nuevaDireccion = this.direccionRepository.create(createDto);
+    return this.direccionRepository.save(nuevaDireccion);
   }
 
-  findAll() {
-    return `This action returns all geoClientesDireccion`;
+  findAll(): Promise<GeoClienteDireccionEntity[]> {
+    return this.direccionRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} geoClientesDireccion`;
+  async findOne(id: number): Promise<GeoClienteDireccionEntity> {
+    const direccion = await this.direccionRepository.findOneBy({ idDireccion: id });
+    if (!direccion) {
+      throw new NotFoundException(`La dirección con ID #${id} no fue encontrada.`);
+    }
+    return direccion;
   }
 
-  update(id: number, updateGeoClientesDireccionDto: UpdateGeoClientesDireccionDto) {
-    return `This action updates a #${id} geoClientesDireccion`;
+  async update(id: number, updateDto: UpdateGeoClienteDireccionDto): Promise<GeoClienteDireccionEntity> {
+    const direccion = await this.direccionRepository.preload({
+      idDireccion: id,
+      ...updateDto,
+    });
+    if (!direccion) {
+      throw new NotFoundException(`La dirección con ID #${id} no fue encontrada.`);
+    }
+    return this.direccionRepository.save(direccion);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} geoClientesDireccion`;
+  async remove(id: number): Promise<{ message: string }> {
+    const direccion = await this.findOne(id);
+    await this.direccionRepository.remove(direccion);
+    return { message: `La dirección con ID #${id} ha sido eliminada.` };
   }
 }
