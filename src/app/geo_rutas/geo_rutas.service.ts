@@ -22,21 +22,38 @@ export class GeoRutasService {
   }
 
   async findOne(id: number): Promise<GeoRutaEntity> {
-    const ruta = await this.geoRutaRepository.findOneBy({ idRuta: id });
+    const ruta = await this.geoRutaRepository.findOne({
+      where: { idRuta: id },
+      relations: ['paradas'], // <-- Carga la relación 'paradas'
+    });
     if (!ruta) {
-      throw new NotFoundException(`La ruta con el ID #${id} no fue encontrada.`);
+      throw new NotFoundException(
+        `La ruta con el ID #${id} no fue encontrada.`,
+      );
     }
     return ruta;
   }
+  // async findOne(id: number): Promise<GeoRutaEntity> {
+  //   const ruta = await this.geoRutaRepository.findOneBy({ idRuta: id });
+  //   if (!ruta) {
+  //     throw new NotFoundException(`La ruta con el ID #${id} no fue encontrada.`);
+  //   }
+  //   return ruta;
+  // }
 
-  async update(id: number, updateGeoRutaDto: UpdateGeoRutaDto): Promise<GeoRutaEntity> {
+  async update(
+    id: number,
+    updateGeoRutaDto: UpdateGeoRutaDto,
+  ): Promise<GeoRutaEntity> {
     const ruta = await this.geoRutaRepository.preload({
       idRuta: id,
       ...updateGeoRutaDto,
     });
 
     if (!ruta) {
-      throw new NotFoundException(`La ruta con el ID #${id} no fue encontrada para actualizar.`);
+      throw new NotFoundException(
+        `La ruta con el ID #${id} no fue encontrada para actualizar.`,
+      );
     }
 
     return this.geoRutaRepository.save(ruta);
