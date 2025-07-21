@@ -8,6 +8,9 @@ export class CreateGeoUnidadesTransporteDto {
   placaUnidad: string;
 
   @IsString()
+  nombreUnidad: string;
+
+  @IsString()
   nivUnidad: string;
 
   @IsString()

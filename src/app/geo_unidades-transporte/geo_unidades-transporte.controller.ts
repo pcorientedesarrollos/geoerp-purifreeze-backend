@@ -3,7 +3,7 @@ import { GeoUnidadesTransporteService } from './geo_unidades-transporte.service'
 import { CreateGeoUnidadesTransporteDto } from './dto/create-geo_unidades-transporte.dto';
 import { UpdateGeoUnidadesTransporteDto } from './dto/update-geo_unidades-transporte.dto';
 
-@Controller('geo-unidades-transporte')
+@Controller('geo-unidad-transporte')
 export class GeoUnidadesTransporteController {
   constructor(private readonly geoUnidadesTransporteService: GeoUnidadesTransporteService) {}
 

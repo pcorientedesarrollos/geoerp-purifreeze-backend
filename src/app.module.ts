@@ -1,15 +1,24 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { config } from 'dotenv';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
+// Rutas de importación que coinciden con tu estructura actual
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './app/users/users.module'; // Ruta a /app/users
+import { GeoClientesModule } from './app/geo_clientes/geo_clientes.module';
 import { GeoRutasModule } from './app/geo_rutas/geo_rutas.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { config } from 'dotenv'; 
 import { GeoRutasDetalleModule } from './app/geo_rutas-detalle/geo_rutas-detalle.module';
 import { GeoTipoServiciosModule } from './app/geo_tipo-servicios/geo_tipo-servicios.module';
-config(); // Cargar variables de entorno desde .env
+import { GeoUnidadesTransporteModule } from './app/geo_unidades-transporte/geo_unidades-transporte.module';
+import { GeoClientesDireccionModule } from './app/geo_clientes-direccion/geo_clientes-direccion.module';
+
+config();
 
 @Module({
-    imports: [
+  imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -18,10 +27,7 @@ config(); // Cargar variables de entorno desde .env
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      
-      synchronize: true, // Solo para desarrollo, no usar en producción
-
-
+      synchronize: true,
       extra: {
         connectionLimit: 10,
         keepAliveInitialDelay: 10000,
@@ -29,9 +35,15 @@ config(); // Cargar variables de entorno desde .env
       },
     }),
 
+    // Lista de módulos limpia, sin duplicados y con las rutas correctas
+    AuthModule,
+    UsersModule,
+    GeoClientesModule,
     GeoRutasModule,
     GeoRutasDetalleModule,
+    GeoUnidadesTransporteModule,
     GeoTipoServiciosModule,
+    GeoClientesDireccionModule
   ],
 
   controllers: [AppController],
