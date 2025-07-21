@@ -25,3 +25,4 @@ export class CreateGeoRutaDto {
   @IsOptional()
   kmInicial?: string;
 }
+

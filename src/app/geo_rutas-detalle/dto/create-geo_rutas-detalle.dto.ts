@@ -13,7 +13,4 @@ export class CreateGeoRutaDetalleDto {
   @IsNotEmpty({ message: 'La longitud es requerida.' })
   readonly longitud: number;
 
-  @IsDateString({}, { message: 'fecha_hora debe ser una fecha válida.' })
-  @IsNotEmpty({ message: 'fecha_hora es requerida.' })
-  readonly fecha_hora: Date;
 }

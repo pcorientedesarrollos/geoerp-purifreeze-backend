@@ -7,6 +7,11 @@ import { UpdateGeoRutaDto } from './dto/update-geo_ruta.dto';
 export class GeoRutasController {
   constructor(private readonly geoRutasService: GeoRutasService) {}
 
+ @Get('resumen')
+  getResumenRutas() {
+    return this.geoRutasService.obtenerResumenRutas();
+  }
+
   @Post()
   create(@Body() createGeoRutaDto: CreateGeoRutaDto) {
     // El ValidationPipe global se encarga de validar el DTO

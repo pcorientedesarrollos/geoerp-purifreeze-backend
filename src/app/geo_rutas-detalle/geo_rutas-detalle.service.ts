@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { GeoRutaDetalleEntity } from './entities/geo_rutas-detalle.entity';
 import { CreateGeoRutaDetalleDto } from './dto/create-geo_rutas-detalle.dto';
 import { UpdateGeoRutaDetalleDto } from './dto/update-geo_rutas-detalle.dto';
-
 @Injectable()
 export class GeoRutasDetalleService {
   constructor(
@@ -45,4 +44,11 @@ export class GeoRutasDetalleService {
     await this.detalleRepository.remove(detalle);
     return { message: `El detalle de ruta con ID #${id} ha sido eliminado.` };
   }
+  
+
+    
+    async guardarCoordenada(dto: CreateGeoRutaDetalleDto): Promise<GeoRutaDetalleEntity> {
+      const nuevo = this.detalleRepository.create(dto);
+      return this.detalleRepository.save(nuevo);
+    }
 }

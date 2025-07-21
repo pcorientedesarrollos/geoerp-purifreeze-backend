@@ -12,6 +12,18 @@ export class GeoRutasService {
     private readonly geoRutaRepository: Repository<GeoRutaEntity>,
   ) {}
 
+   async obtenerResumenRutas() {
+    const query = `
+     select gr.idRuta ,c.nombreComercial , u.usuario , gut.nombreUnidad , gr.kmlInicial ,gr.fecha_hora ,gr.idTipoServicio 
+      from geo_rutas gr 
+      left join clientes c on c.idcliente = gr.idCliente
+      left join usuarios u on u.idUsuario = gr.idUsuario 
+      left join geo_unidadTransporte gut on  gut.idUnidadTransporte = gr.idUnidadTransporte
+      order by idRuta desc 
+    `;
+    return await this.geoRutaRepository.query(query);
+  }
+
   async create(createGeoRutaDto: CreateGeoRutaDto): Promise<GeoRutaEntity> {
     const nuevaRuta = this.geoRutaRepository.create(createGeoRutaDto);
     return this.geoRutaRepository.save(nuevaRuta);

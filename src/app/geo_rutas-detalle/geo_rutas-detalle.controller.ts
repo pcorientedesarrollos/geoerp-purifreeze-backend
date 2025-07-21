@@ -31,4 +31,10 @@ export class GeoRutasDetalleController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasDetalleService.remove(id);
   }
+
+  @Post('guardar')
+  async guardar(@Body() dto: CreateGeoRutaDetalleDto) {
+    return this.geoRutasDetalleService.guardarCoordenada(dto);
+  }
+
 }
