@@ -13,6 +13,7 @@ import { GeoRutasModule } from './app/geo_rutas/geo_rutas.module';
 import { GeoRutasDetalleModule } from './app/geo_rutas-detalle/geo_rutas-detalle.module';
 import { GeoTipoServiciosModule } from './app/geo_tipo-servicios/geo_tipo-servicios.module';
 import { GeoUnidadesTransporteModule } from './app/geo_unidades-transporte/geo_unidades-transporte.module';
+import { GeoClientesDireccionModule } from './app/geo_clientes-direccion/geo_clientes-direccion.module';
 
 config();
 
@@ -42,6 +43,7 @@ config();
     GeoRutasDetalleModule,
     GeoUnidadesTransporteModule,
     GeoTipoServiciosModule,
+    GeoClientesDireccionModule
   ],
 
   controllers: [AppController],
