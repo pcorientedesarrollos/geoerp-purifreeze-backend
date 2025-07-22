@@ -16,4 +16,6 @@ export class CreateGeoRutaDetalleDto {
   @IsDateString({}, { message: 'fecha_hora debe ser una fecha válida.' })
   @IsNotEmpty({ message: 'fecha_hora es requerida.' })
   fecha_hora: Date;
+
+  // Puedes agregar más validaciones según tus necesidades
 }
