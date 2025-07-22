@@ -33,6 +33,10 @@ export class UsersService {
       },
     });
   }
+
+  async findAll(): Promise<User[]> {
+    return this.usersRepository.find();
+  }
   // --- MÉTODO NUEVO A AÑADIR ---
   // Busca en la BD todos los usuarios cuyo campo 'descriptor_facial' no sea nulo.
 }

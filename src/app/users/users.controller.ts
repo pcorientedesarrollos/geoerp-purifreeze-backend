@@ -15,6 +15,11 @@ import { RegisterFaceDto } from './dto/register-face.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get()
+  async getAllUsers() {
+    return this.usersService.findAll();
+  }
+
   @Get('facial-login-data') // La ruta será GET /users/facial-login-data
   async getUsersForFacialLogin() {
     return this.usersService.findUsersForFacialLogin();
