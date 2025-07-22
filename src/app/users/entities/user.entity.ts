@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
-@Entity({ name: 'usuarios' }) // Le decimos que esta entidad mapea a la tabla 'usuarios'
+@Entity('usuarios') // Le decimos que esta entidad mapea a la tabla 'usuarios'
 export class User {
   @PrimaryGeneratedColumn()
   idUsuario: number;
