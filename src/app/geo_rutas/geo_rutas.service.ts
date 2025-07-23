@@ -30,7 +30,9 @@ export class GeoRutasService {
   }
 
   findAll(): Promise<GeoRutaEntity[]> {
-    return this.geoRutaRepository.find();
+    return this.geoRutaRepository.find({
+      order: { fecha_hora: 'DESC' },
+    });
   }
 
   async findOne(id: number): Promise<GeoRutaEntity> {
