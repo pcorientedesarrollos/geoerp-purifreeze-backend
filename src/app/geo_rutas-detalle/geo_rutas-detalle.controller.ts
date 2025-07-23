@@ -34,6 +34,7 @@ export class GeoRutasDetalleController {
 
   @Post('guardar')
   async guardar(@Body() dto: CreateGeoRutaDetalleDto) {
+    console.log('pasa por el controlador');
     return this.geoRutasDetalleService.guardarCoordenada(dto);
   }
 

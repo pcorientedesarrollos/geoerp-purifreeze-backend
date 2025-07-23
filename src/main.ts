@@ -24,7 +24,7 @@ async function bootstrap() {
       },
     }),
   );
-
+  await app.listen(3000, '0.0.0.0');
   // --- FIN DE LA MODIFICACIÓN ---
 
   // Habilitar CORS si tu frontend está en otro dominio

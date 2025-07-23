@@ -14,7 +14,7 @@ export class GeoRutasService {
 
    async obtenerResumenRutas() {
     const query = `
-     select gr.idRuta ,c.nombreComercial , u.usuario , gut.nombreUnidad , gr.kmlInicial ,gr.fecha_hora ,gr.idTipoServicio 
+     select gr.idRuta ,c.nombreComercio , u.usuario , gut.nombreUnidad , gr.kmlInicial ,gr.fecha_hora ,gr.idTipoServicio 
       from geo_rutas gr 
       left join clientes c on c.idcliente = gr.idCliente
       left join usuarios u on u.idUsuario = gr.idUsuario 

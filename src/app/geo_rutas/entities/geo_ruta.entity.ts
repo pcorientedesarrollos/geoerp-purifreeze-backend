@@ -19,6 +19,13 @@ export class GeoRutaEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   kmlInicial: string;
 
+  @Column({ type: 'int' })
+  idTipoServicio: number;
+
+  @Column({ type: 'int' })
+  idCliente: number;
+
+
   // --- CAMBIO 2: Usar el nombre de clase correcto en la relación ---
   @OneToMany(() => GeoRutasParadaEntity, (parada) => parada.ruta, {
     cascade: true,
