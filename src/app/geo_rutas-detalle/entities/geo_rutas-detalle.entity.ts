@@ -1,5 +1,11 @@
 import { GeoRutaEntity } from 'src/app/geo_rutas/entities/geo_ruta.entity';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity('geo_rutasDetalle')
 export class GeoRutaDetalleEntity {

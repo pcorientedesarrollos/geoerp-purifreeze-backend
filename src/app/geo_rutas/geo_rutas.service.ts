@@ -12,7 +12,7 @@ export class GeoRutasService {
     private readonly geoRutaRepository: Repository<GeoRutaEntity>,
   ) {}
 
-   async obtenerResumenRutas() {
+  async obtenerResumenRutas() {
     const query = `
      select gr.idRuta ,c.nombreComercio , u.usuario , gut.nombreUnidad , gr.kmlInicial ,gr.fecha_hora ,gr.idTipoServicio 
       from geo_rutas gr 
