@@ -11,7 +11,7 @@ import { GeoRutasParadasService } from './geo-rutas-paradas.service';
 import { CreateGeoRutasParadaDto } from './dto/create-geo-rutas-parada.dto';
 import { UpdateGeoRutasParadaDto } from './dto/update-geo-rutas-parada.dto';
 
-@Controller('geo-rutasParadas')
+@Controller('geo-rutas-paradas')
 export class GeoRutasParadasController {
   constructor(
     private readonly geoRutasParadasService: GeoRutasParadasService,

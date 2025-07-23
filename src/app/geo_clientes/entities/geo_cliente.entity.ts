@@ -3,13 +3,15 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('clientes')
 export class GeoCliente {
   @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn()
   idcliente: number;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({  name: 'razon_social',type: 'varchar', length: 50 })
   razon_social: string;
-  
-  @Column({ type: 'varchar', length: 50 })
+
+  @Column({ name: 'rfc', type: 'varchar', length: 50 })
   rfc: string;
+  
   
   @Column({ type: 'varchar', length: 100, nullable: true })
   nombreEncargado: string;
@@ -37,7 +39,7 @@ export class GeoCliente {
   
   @Column({ type: 'varchar', length: 50, nullable: true })
   nombreArchivo: string;
-
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  nombreComercial: string;
+  
+@Column({ name: 'nombreComercio', type: 'varchar', length: 50 })  
+nombreComercio: string;
 }

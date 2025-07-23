@@ -3,7 +3,7 @@ import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class CreateGeoClienteDto {
   @IsOptional()
   @IsString()
-  nombreComercial?: string;
+  nombreComercio: string;
 
   @IsOptional()
   @IsString()

@@ -14,6 +14,7 @@ import { GeoRutasDetalleModule } from './app/geo_rutas-detalle/geo_rutas-detalle
 import { GeoTipoServiciosModule } from './app/geo_tipo-servicios/geo_tipo-servicios.module';
 import { GeoUnidadesTransporteModule } from './app/geo_unidades-transporte/geo_unidades-transporte.module';
 import { GeoClientesDireccionModule } from './app/geo_clientes-direccion/geo_clientes-direccion.module';
+import { GeoRutasParadasModule } from './app/geo-rutas-paradas/geo-rutas-paradas.module';
 
 config();
 
@@ -27,7 +28,7 @@ config();
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: false,
       extra: {
         connectionLimit: 10,
         keepAliveInitialDelay: 10000,
@@ -43,7 +44,8 @@ config();
     GeoRutasDetalleModule,
     GeoUnidadesTransporteModule,
     GeoTipoServiciosModule,
-    GeoClientesDireccionModule
+    GeoClientesDireccionModule,
+    GeoRutasParadasModule, // Asegúrate de que este módulo esté importado correctamente
   ],
 
   controllers: [AppController],
