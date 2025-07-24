@@ -15,19 +15,27 @@ export class GeoRutaDetalleEntity {
   @Column({ type: 'int' })
   idRuta: number;
 
+  @Column({ type: 'int' })
+  idCliente: number;
+
   @Column({ type: 'decimal', precision: 10, scale: 8 })
   latitud: number;
 
   @Column({ type: 'decimal', precision: 11, scale: 8 })
   longitud: number;
 
-  @Column({ type: 'datetime' })
+  // : Cambiae de 'datetime' a 'timestamp' para coincidir con la tabla cualquier cosa modifiquen.
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   fecha_hora: Date;
 
-  // Relación: Muchos detalles pertenecen a UNA ruta.
+  //  Cambie de 'int' a 'smallint' para coincidir con la tabla.
+  @Column({ type: 'smallint' })
+  status: number;
+
+  //: Muchos detalles pertenecen a UNA ruta.
   @ManyToOne(() => GeoRutaEntity, (ruta) => ruta.detalles, {
-    onDelete: 'CASCADE', // Si se borra la ruta, se borran sus detalles.
+    onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'idRuta' }) // Especifica que la columna 'idRuta' es la clave foránea.
+  @JoinColumn({ name: 'idRuta' })
   ruta: GeoRutaEntity;
 }

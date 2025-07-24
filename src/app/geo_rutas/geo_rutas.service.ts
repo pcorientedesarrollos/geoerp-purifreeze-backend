@@ -1,3 +1,5 @@
+// src/geo_rutas/geo_rutas.service.ts
+
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,13 +15,20 @@ export class GeoRutasService {
   ) {}
 
   async obtenerResumenRutas() {
+    // CORREGIDO: Se eliminó la unión con la tabla 'clientes' y el campo 'nombreComercio'
+    // ya que 'idCliente' no existe en 'geo_rutas'.
     const query = `
-     select gr.idRuta ,c.nombreComercio , u.usuario , gut.nombreUnidad , gr.kmlInicial ,gr.fecha_hora ,gr.idTipoServicio 
-      from geo_rutas gr 
-      left join clientes c on c.idcliente = gr.idCliente
-      left join usuarios u on u.idUsuario = gr.idUsuario 
-      left join geo_unidadTransporte gut on  gut.idUnidadTransporte = gr.idUnidadTransporte
-      order by idRuta desc 
+     SELECT 
+        gr.idRuta,
+        u.usuario,
+        gut.nombreUnidad,
+        gr.kmlInicial,
+        gr.fecha_hora,
+        gr.idTipoServicio 
+      FROM geo_rutas gr 
+      LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario 
+      LEFT JOIN geo_unidadTransporte gut ON gut.idUnidadTransporte = gr.idUnidadTransporte
+      ORDER BY idRuta DESC
     `;
     return await this.geoRutaRepository.query(query);
   }
@@ -31,14 +40,15 @@ export class GeoRutasService {
 
   findAll(): Promise<GeoRutaEntity[]> {
     return this.geoRutaRepository.find({
-      order: { fecha_hora: 'DESC' },
+      order: { idRuta: 'DESC' }, // Es común ordenar por ID para ver las más recientes
+      relations: ['paradas'],
     });
   }
 
   async findOne(id: number): Promise<GeoRutaEntity> {
     const ruta = await this.geoRutaRepository.findOne({
       where: { idRuta: id },
-      relations: ['paradas'], // <-- Carga la relación 'paradas'
+      relations: ['paradas', 'detalles'], // Carga ambas relaciones
     });
     if (!ruta) {
       throw new NotFoundException(
@@ -47,35 +57,28 @@ export class GeoRutasService {
     }
     return ruta;
   }
-  // async findOne(id: number): Promise<GeoRutaEntity> {
-  //   const ruta = await this.geoRutaRepository.findOneBy({ idRuta: id });
-  //   if (!ruta) {
-  //     throw new NotFoundException(`La ruta con el ID #${id} no fue encontrada.`);
-  //   }
-  //   return ruta;
-  // }
 
   async update(
     id: number,
     updateGeoRutaDto: UpdateGeoRutaDto,
   ): Promise<GeoRutaEntity> {
-    const ruta = await this.geoRutaRepository.preload({
-      idRuta: id,
-      ...updateGeoRutaDto,
-    });
+    // Asegúrate de que las paradas no se eliminen si no se envían en el DTO de actualización
+    const rutaExistente = await this.findOne(id);
+    const rutaActualizada = this.geoRutaRepository.merge(
+      rutaExistente,
+      updateGeoRutaDto,
+    );
 
-    if (!ruta) {
-      throw new NotFoundException(
-        `La ruta con el ID #${id} no fue encontrada para actualizar.`,
-      );
-    }
-
-    return this.geoRutaRepository.save(ruta);
+    return this.geoRutaRepository.save(rutaActualizada);
   }
 
   async remove(id: number): Promise<{ message: string }> {
-    const rutaAEliminar = await this.findOne(id); // Reutilizamos findOne para verificar que existe
-    await this.geoRutaRepository.remove(rutaAEliminar);
+    const result = await this.geoRutaRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(
+        `La ruta con el ID #${id} no fue encontrada para eliminar.`,
+      );
+    }
     return { message: `La ruta con el ID #${id} ha sido eliminada.` };
   }
 }
