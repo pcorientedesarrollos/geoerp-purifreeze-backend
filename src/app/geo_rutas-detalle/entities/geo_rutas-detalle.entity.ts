@@ -1,10 +1,14 @@
+// src/app/geo_rutas-detalle/entities/geo_rutas-detalle.entity.ts
+
 import { GeoRutaEntity } from 'src/app/geo_rutas/entities/geo_ruta.entity';
+import { GeoRecorridoEntity } from 'src/app/geo-recorrido/entities/geo-recorrido.entity'; // <-- AÑADIR IMPORTACIÓN
 import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany, // <-- AÑADIR IMPORTACIÓN
 } from 'typeorm';
 
 @Entity('geo_rutasDetalle')
@@ -24,18 +28,21 @@ export class GeoRutaDetalleEntity {
   @Column({ type: 'decimal', precision: 11, scale: 8 })
   longitud: number;
 
-  // : Cambiae de 'datetime' a 'timestamp' para coincidir con la tabla cualquier cosa modifiquen.
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   fecha_hora: Date;
 
-  //  Cambie de 'int' a 'smallint' para coincidir con la tabla.
   @Column({ type: 'smallint' })
   status: number;
 
-  //: Muchos detalles pertenecen a UNA ruta.
+  // Relación: Muchos detalles pertenecen a UNA ruta.
   @ManyToOne(() => GeoRutaEntity, (ruta) => ruta.detalles, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'idRuta' })
   ruta: GeoRutaEntity;
+
+  // --- AÑADIR ESTA RELACIÓN ---
+  // Un detalle de ruta puede tener muchos puntos de recorrido.
+  @OneToMany(() => GeoRecorridoEntity, (recorrido) => recorrido.rutaDetalle)
+  recorridos: GeoRecorridoEntity[];
 }
