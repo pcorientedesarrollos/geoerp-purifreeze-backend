@@ -6,7 +6,6 @@ export class CreateGeoRutasParadaDto {
   idCliente: number;
 
   @IsInt()
-  @IsNotEmpty()
   idSucursal: number;
 
   @IsString()
