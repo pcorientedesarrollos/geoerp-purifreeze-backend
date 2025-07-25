@@ -21,10 +21,6 @@ export class CreateGeoRutaDto {
   @IsNotEmpty()
   idUnidadTransporte: number;
 
-  @IsInt()
-  @IsNotEmpty()
-  idTipoServicio: number;
-
   @IsDateString()
   @IsNotEmpty()
   fecha_hora: Date;

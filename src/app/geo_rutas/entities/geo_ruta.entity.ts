@@ -22,9 +22,6 @@ export class GeoRutaEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   kmlInicial: string;
 
-  @Column({ type: 'int' })
-  idTipoServicio: number;
-
   // Relación con Paradas
   @OneToMany(() => GeoRutasParadaEntity, (parada) => parada.ruta, {
     cascade: true,
