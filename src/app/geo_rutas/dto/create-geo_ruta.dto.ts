@@ -23,7 +23,7 @@ export class CreateGeoRutaDto {
 
   @IsDateString()
   @IsNotEmpty()
-  fecha_hora: Date;
+  fecha_hora: string;
 
   // CORREGIDO: El nombre de la propiedad ahora es 'kmlInicial'
   @IsString()
