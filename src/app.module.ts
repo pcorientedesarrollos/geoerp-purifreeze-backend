@@ -15,6 +15,7 @@ import { GeoTipoServiciosModule } from './app/geo_tipo-servicios/geo_tipo-servic
 import { GeoUnidadesTransporteModule } from './app/geo_unidades-transporte/geo_unidades-transporte.module';
 import { GeoClientesDireccionModule } from './app/geo_clientes-direccion/geo_clientes-direccion.module';
 import { GeoRutasParadasModule } from './app/geo-rutas-paradas/geo-rutas-paradas.module';
+import { GeoRecorridoModule } from './app/geo-recorrido/geo-recorrido.module';
 
 config();
 
@@ -45,7 +46,8 @@ config();
     GeoUnidadesTransporteModule,
     GeoTipoServiciosModule,
     GeoClientesDireccionModule,
-    GeoRutasParadasModule, // Asegúrate de que este módulo esté importado correctamente
+    GeoRutasParadasModule,
+    GeoRecorridoModule,
   ],
 
   controllers: [AppController],

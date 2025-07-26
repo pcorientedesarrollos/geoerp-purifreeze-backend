@@ -21,20 +21,27 @@ export class GeoRutasDetalleService {
   }
 
   async findOne(id: number): Promise<GeoRutaDetalleEntity> {
-    const detalle = await this.detalleRepository.findOneBy({ idRutaDetalle: id });
+    const detalle = await this.detalleRepository.findOneBy({ idRuta: id });
     if (!detalle) {
-      throw new NotFoundException(`El detalle de ruta con ID #${id} no fue encontrado.`);
+      throw new NotFoundException(
+        `El detalle de ruta con ID #${id} no fue encontrado.`,
+      );
     }
     return detalle;
   }
 
-  async update(id: number, updateDto: UpdateGeoRutaDetalleDto): Promise<GeoRutaDetalleEntity> {
+  async update(
+    id: number,
+    updateDto: UpdateGeoRutaDetalleDto,
+  ): Promise<GeoRutaDetalleEntity> {
     const detalle = await this.detalleRepository.preload({
-      idRutaDetalle: id,
+      idRuta: id,
       ...updateDto,
     });
     if (!detalle) {
-      throw new NotFoundException(`El detalle de ruta con ID #${id} no fue encontrado.`);
+      throw new NotFoundException(
+        `El detalle de ruta con ID #${id} no fue encontrado.`,
+      );
     }
     return this.detalleRepository.save(detalle);
   }
@@ -44,11 +51,11 @@ export class GeoRutasDetalleService {
     await this.detalleRepository.remove(detalle);
     return { message: `El detalle de ruta con ID #${id} ha sido eliminado.` };
   }
-  
 
-    
-    async guardarCoordenada(dto: CreateGeoRutaDetalleDto): Promise<GeoRutaDetalleEntity> {
-      const nuevo = this.detalleRepository.create(dto);
-      return this.detalleRepository.save(nuevo);
-    }
+  async guardarCoordenada(
+    dto: CreateGeoRutaDetalleDto,
+  ): Promise<GeoRutaDetalleEntity> {
+    const nuevo = this.detalleRepository.create(dto);
+    return this.detalleRepository.save(nuevo);
+  }
 }

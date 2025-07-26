@@ -1,5 +1,3 @@
-// src/app/geo-recorrido/entities/geo-recorrido.entity.ts
-
 import { GeoRutaDetalleEntity } from 'src/app/geo_rutas-detalle/entities/geo_rutas-detalle.entity';
 import {
   Column,
@@ -16,7 +14,7 @@ export class GeoRecorridoEntity {
   idRecorrido: number;
 
   @Column({ type: 'int' })
-  idRutaDetalle: number;
+  idRuta: number; // CORREGIDO
 
   @Column({ type: 'decimal', precision: 10, scale: 8 })
   latitud: number;
@@ -27,13 +25,11 @@ export class GeoRecorridoEntity {
   @CreateDateColumn({ type: 'timestamp', name: 'fechaHora' })
   fechaHora: Date;
 
-  // Relación: Muchos puntos de recorrido pueden pertenecer a UN detalle de ruta.
   @ManyToOne(
     () => GeoRutaDetalleEntity,
-    // --- CORREGIR ESTA LÍNEA ---
-    (rutaDetalle) => rutaDetalle.recorridos, // Antes decía 'rutaDetalle.detalles'
+    (rutaDetalle) => rutaDetalle.recorridos,
     { onDelete: 'CASCADE' },
   )
-  @JoinColumn({ name: 'idRutaDetalle' })
+  @JoinColumn({ name: 'idRuta' }) // CORREGIDO
   rutaDetalle: GeoRutaDetalleEntity;
 }

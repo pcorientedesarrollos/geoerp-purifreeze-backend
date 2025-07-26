@@ -1,5 +1,3 @@
-// src/app/geo-recorrido/geo-recorrido.service.ts
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,7 +12,7 @@ export class GeoRecorridoService {
     private readonly recorridoRepository: Repository<GeoRecorridoEntity>,
   ) {}
 
-  async create(createDto: CreateGeoRecorridoDto): Promise<GeoRecorridoEntity> {
+  create(createDto: CreateGeoRecorridoDto): Promise<GeoRecorridoEntity> {
     const nuevoRecorrido = this.recorridoRepository.create(createDto);
     return this.recorridoRepository.save(nuevoRecorrido);
   }
@@ -22,7 +20,7 @@ export class GeoRecorridoService {
   findAll(): Promise<GeoRecorridoEntity[]> {
     return this.recorridoRepository.find({
       order: { fechaHora: 'DESC' },
-      relations: ['rutaDetalle'], // Carga la información del detalle de ruta asociado
+      relations: ['rutaDetalle'], // CORREGIDO (Debe usar el nombre de la propiedad de la entidad)
     });
   }
 
