@@ -1,17 +1,10 @@
-// src/app/geo_rutas-detalle/entities/geo_rutas-detalle.entity.ts
+// src/app/geo-rutas-detalle/entities/geo-rutas-detalle.entity.ts
 
+import { GeoRecorridoEntity } from 'src/app/geo-recorrido/entities/geo-recorrido.entity';
 import { GeoRutaEntity } from 'src/app/geo_rutas/entities/geo_ruta.entity';
-import { GeoRecorridoEntity } from 'src/app/geo-recorrido/entities/geo-recorrido.entity'; //
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
-@Entity('geo_rutasDetalle')
+@Entity('geo_rutasDetalle') // El nombre de tu tabla final
 export class GeoRutaDetalleEntity {
   @PrimaryGeneratedColumn()
   idRutaDetalle: number;
@@ -20,28 +13,49 @@ export class GeoRutaDetalleEntity {
   idRuta: number;
 
   @Column({ type: 'int' })
-  idCliente: number;
+  idServicioEquipo: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 8 })
-  latitud: number;
+  @Column({ type: 'varchar', nullable: true })
+  noSerie: string;
 
-  @Column({ type: 'decimal', precision: 11, scale: 8 })
-  longitud: number;
+  @Column({ type: 'varchar' })
+  nombreEquipo: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  fecha_hora: Date;
+  @Column({ type: 'date' })
+  fechaServicio: string;
+  
+  @Column({ type: 'time' })
+  hora: string;
 
-  @Column({ type: 'smallint' })
+  @Column({ type: 'varchar' })
+  tipoServicio: string;
+
+  @Column({ type: 'text', nullable: true })
+  descripcion: string;
+
+  @Column({ type: 'text', nullable: true })
+  observacionesServicio: string;
+
+  @Column({ type: 'int' })
+  idContrato: number;
+
+  @Column({ type: 'varchar' })
+  nombreComercio: string;
+
+  @Column({ type: 'smallint', default: 1 }) // Ejemplo: 1 = pendiente, 2 = visitado
   status: number;
 
-  // Relación: Muchos detalles pertenecen a UNA ruta.
-  @ManyToOne(() => GeoRutaEntity, (ruta) => ruta.detalles, {
-    onDelete: 'CASCADE',
-  })
+
+  @ManyToOne(() => GeoRutaEntity, (ruta) => ruta.detalles, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'idRuta' })
   ruta: GeoRutaEntity;
 
-  // Un detalle de ruta puede tener muchos puntos de recorrido.
+  
+  // --- RELACIÓN #2: Con GeoRecorrido (Uno a Muchos) ---
+  // Esta es la sección que estás añadiendo, tomada de tu entidad antigua.
+  // Significa: "UN detalle de ruta puede tener MUCHOS puntos de recorrido."
   @OneToMany(() => GeoRecorridoEntity, (recorrido) => recorrido.rutaDetalle)
   recorridos: GeoRecorridoEntity[];
 }
+
+
