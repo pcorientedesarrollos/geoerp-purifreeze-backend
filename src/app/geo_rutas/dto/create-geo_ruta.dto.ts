@@ -10,7 +10,6 @@ import {
   ValidateNested,
   IsOptional,
 } from 'class-validator';
-import { CreateGeoRutasParadaDto } from 'src/app/geo-rutas-paradas/dto/create-geo-rutas-parada.dto';
 
 export class CreateGeoRutaDto {
   @IsInt()
@@ -21,18 +20,10 @@ export class CreateGeoRutaDto {
   @IsNotEmpty()
   idUnidadTransporte: number;
 
-  @IsDateString()
-  @IsNotEmpty()
-  fecha_hora: string;
 
   // CORREGIDO: El nombre de la propiedad ahora es 'kmlInicial'
   @IsString()
   @IsOptional() // Se hace opcional para coincidir con la entidad (nullable: true)
-  kmlInicial?: string;
+  kmInicial?: string;
 
-  @IsArray()
-  @ValidateNested({ each: true })
-  // CORREGIDO: El tipo debe ser el DTO de Parada
-  @Type(() => CreateGeoRutasParadaDto)
-  paradas: CreateGeoRutasParadaDto[];
 }
