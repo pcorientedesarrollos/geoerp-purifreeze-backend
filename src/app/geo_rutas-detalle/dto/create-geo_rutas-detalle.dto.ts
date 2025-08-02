@@ -72,7 +72,7 @@ export class CreateGeoRutaDetalleDto {
   hora: string;
 
   @IsString() @IsNotEmpty()
-  tipoServicio: string;
+  tipo_Servicio: string;
 
   @IsOptional() @IsString()
   descripcion?: string;
