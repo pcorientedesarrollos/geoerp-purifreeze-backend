@@ -18,15 +18,15 @@
 //     // CORREGIDO: Se eliminó la unión con la tabla 'clientes' y el campo 'nombreComercio'
 //     // ya que 'idCliente' no existe en 'geo_rutas'.
 //     const query = `
-//      SELECT 
+//      SELECT
 //         gr.idRuta,
 //         u.usuario,
 //         gut.nombreUnidad,
 //         gr.kmlInicial,
 //         gr.fecha_hora,
-//         gr.idTipoServicio 
-//       FROM geo_rutas gr 
-//       LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario 
+//         gr.idTipoServicio
+//       FROM geo_rutas gr
+//       LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario
 //       LEFT JOIN geo_unidadTransporte gut ON gut.idUnidadTransporte = gr.idUnidadTransporte
 //       ORDER BY idRuta DESC
 //     `;
@@ -83,9 +83,6 @@
 //   }
 // }
 
-
-
-
 // import { Injectable, NotFoundException } from '@nestjs/common';
 // import { InjectRepository } from '@nestjs/typeorm';
 // import { Repository } from 'typeorm';
@@ -100,7 +97,7 @@
 //   constructor(
 //     @InjectRepository(GeoRutaEntity)
 //     private readonly geoRutaRepository: Repository<GeoRutaEntity>,
-    
+
 //     // Inyectamos el repositorio de Paradas para poder usarlo directamente
 //     @InjectRepository(GeoRutasParadaEntity)
 //     private readonly paradaRepository: Repository<GeoRutasParadaEntity>,
@@ -109,15 +106,15 @@
 //   async obtenerResumenRutas() {
 //     // Tu código existente aquí...
 //     const query = `
-//      SELECT 
+//      SELECT
 //         gr.idRuta,
 //         u.usuario,
 //         gut.nombreUnidad,
 //         gr.kmlInicial,
 //         gr.fecha_hora,
-//         gr.idTipoServicio 
-//       FROM geo_rutas gr 
-//       LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario 
+//         gr.idTipoServicio
+//       FROM geo_rutas gr
+//       LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario
 //       LEFT JOIN geo_unidadTransporte gut ON gut.idUnidadTransporte = gr.idUnidadTransporte
 //       ORDER BY idRuta DESC
 //     `;
@@ -138,17 +135,17 @@
 //     if (paradas && paradas.length > 0) {
 //       // 4. Mapeamos cada DTO de parada a una entidad de parada,
 //       //    asignando explícitamente el ID de la ruta que acabamos de guardar.
-//       const paradasAGuardar = paradas.map(paradaDto => 
+//       const paradasAGuardar = paradas.map(paradaDto =>
 //         this.paradaRepository.create({
 //           ...paradaDto,
 //           ruta: rutaGuardada, // Vinculamos la parada a la entidad de ruta completa
 //         })
 //       );
-      
+
 //       // 5. Guardamos todas las entidades de parada en la base de datos de una sola vez.
 //       await this.paradaRepository.save(paradasAGuardar);
 //     }
-    
+
 //     // 6. Volvemos a buscar la ruta guardada, pero esta vez cargando la relación 'paradas'
 //     //    para devolver el objeto completo y consistente al frontend.
 //     return this.findOne(rutaGuardada.idRuta);
@@ -197,23 +194,29 @@
 //   }
 // }
 
-
-
-
 // En tu proyecto NestJS: src/app/geo_rutas/geo_rutas.service.ts
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { CreateGeoRutaDto } from './dto/create-geo_ruta.dto';
 import { UpdateGeoRutaDto } from './dto/update-geo_ruta.dto';
 import { GeoRutaEntity } from './entities/geo_ruta.entity';
+
+//Interfaz para la ubicacion de cada CLIENTE
+export interface ClienteGeolocalizado {
+  nombreComercio: string;
+  direccion: string;
+  latitud: string;
+  longitud: string;
+}
 
 @Injectable()
 export class GeoRutasService {
   constructor(
     @InjectRepository(GeoRutaEntity)
     private readonly geoRutaRepository: Repository<GeoRutaEntity>,
+    private readonly entityManager: EntityManager,
   ) {}
 
   /**
@@ -250,7 +253,9 @@ export class GeoRutasService {
       relations: ['detalles'], // Asegúrate de cargar los detalles
     });
     if (!ruta) {
-      throw new NotFoundException(`La ruta con el ID #${id} no fue encontrada.`);
+      throw new NotFoundException(
+        `La ruta con el ID #${id} no fue encontrada.`,
+      );
     }
     return ruta;
   }
@@ -259,7 +264,10 @@ export class GeoRutasService {
    * Actualiza los datos del encabezado de una ruta.
    * Este método no modificará los detalles asociados.
    */
-  async update(id: number, updateGeoRutaDto: UpdateGeoRutaDto): Promise<GeoRutaEntity> {
+  async update(
+    id: number,
+    updateGeoRutaDto: UpdateGeoRutaDto,
+  ): Promise<GeoRutaEntity> {
     // Preload busca la entidad y la fusiona con los nuevos datos del DTO.
     const rutaActualizada = await this.geoRutaRepository.preload({
       idRuta: id,
@@ -267,9 +275,11 @@ export class GeoRutasService {
     });
 
     if (!rutaActualizada) {
-      throw new NotFoundException(`La ruta con el ID #${id} no fue encontrada para actualizar.`);
+      throw new NotFoundException(
+        `La ruta con el ID #${id} no fue encontrada para actualizar.`,
+      );
     }
-    
+
     return this.geoRutaRepository.save(rutaActualizada);
   }
 
@@ -280,11 +290,12 @@ export class GeoRutasService {
   async remove(id: number): Promise<{ message: string }> {
     const result = await this.geoRutaRepository.delete(id);
     if (result.affected === 0) {
-      throw new NotFoundException(`La ruta con el ID #${id} no fue encontrada para eliminar.`);
+      throw new NotFoundException(
+        `La ruta con el ID #${id} no fue encontrada para eliminar.`,
+      );
     }
     return { message: `La ruta con el ID #${id} ha sido eliminada.` };
   }
-
 
   /**
    * MÉTODO DE RESUMEN OPCIONAL
@@ -293,17 +304,40 @@ export class GeoRutasService {
    */
   async obtenerResumenRutas() {
     const query = `
-     SELECT 
+     SELECT
         gr.idRuta,
         u.usuario,
         gut.nombreUnidad,
         gr.kmInicial,
         gr.fecha_hora
-      FROM geo_rutas gr 
-      LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario 
+      FROM geo_rutas gr
+      LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario
       LEFT JOIN geo_unidadTransporte gut ON gut.idUnidadTransporte = gr.idUnidadTransporte
       ORDER BY idRuta DESC
     `;
+
     return await this.geoRutaRepository.query(query);
+  }
+  async findClientesGeolocalizadosParaRuta(
+    idRuta: number,
+  ): Promise<ClienteGeolocalizado[]> {
+    const query = `
+      SELECT
+          c.nombreComercio,
+          cd.direccion,
+          TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', 1)) AS latitud,
+          TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', -1)) AS longitud
+      FROM geo_rutas gr
+      JOIN geo_rutasDetalle grd ON gr.idRuta = grd.idRuta
+      JOIN servicios_equipos se ON grd.idServicioEquipo = se.idServicioEquipo
+      JOIN equipos_cliente ec ON se.idContrato = ec.idEquipoCliente
+      JOIN clientes c ON ec.idCliente = c.idcliente
+      JOIN cliente_direcciones cd ON c.idcliente = cd.idCliente
+      WHERE gr.idRuta = ?
+        AND cd.nombreSucursal REGEXP '^-?[0-9]+\\\.?[0-9]*[[:space:]]?,[[:space:]]?-?[0-9]+\\\.?[0-9]*$'
+      GROUP BY c.nombreComercio, cd.direccion, latitud, longitud;
+    `;
+    // Pasamos el idRuta como parámetro a la consulta
+    return this.entityManager.query(query, [idRuta]);
   }
 }

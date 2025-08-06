@@ -1,5 +1,3 @@
-
-
 // src/app/geo-rutas-detalle/geo-rutas-detalle.service.ts
 
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -92,9 +90,7 @@ export class GeoRutasDetalleService {
     };
   }
 
-
-
-    async guardarCoordenada(
+  async guardarCoordenada(
     dto: CreateGeoRutaDetalleDto,
   ): Promise<GeoRutaDetalleEntity> {
     const nuevo = this.detalleRepository.create(dto);

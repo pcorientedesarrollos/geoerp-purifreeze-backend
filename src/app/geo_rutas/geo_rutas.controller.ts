@@ -38,6 +38,15 @@ export class GeoRutasController {
     return this.geoRutasService.findOne(id);
   }
 
+  /** ESTE ES EL NUEVO GET PARA QUE SE PUEDAN OPTENER
+   * Expone la funcionalidad para obtener los clientes geolocalizados de una ruta.
+   * Se accede a través de GET /api/geo-rutas/:id/clientes-geolocalizados
+   */
+  @Get(':id/clientes-geolocalizados')
+  getClientesGeolocalizados(@Param('id', ParseIntPipe) id: number) {
+    return this.geoRutasService.findClientesGeolocalizadosParaRuta(id);
+  }
+
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
