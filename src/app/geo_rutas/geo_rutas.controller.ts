@@ -13,6 +13,7 @@ import {
 import { GeoRutasService } from './geo_rutas.service';
 import { CreateGeoRutaDto } from './dto/create-geo_ruta.dto';
 import { UpdateGeoRutaDto } from './dto/update-geo_ruta.dto';
+import { RutaStatus } from './entities/geo_ruta.entity';
 
 @Controller('geo-rutas')
 export class GeoRutasController {
@@ -36,6 +37,18 @@ export class GeoRutasController {
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasService.findOne(id);
+  }
+
+  //ENDPOINTS PARA LA APP DE FLUTTER
+
+  @Patch(':id/iniciar')
+  async iniciarRuta(@Param('id', ParseIntPipe) id: number) {
+    return this.geoRutasService.update(id, { status: RutaStatus.EN_CURSO });
+  }
+
+  @Patch(':id/finalizar')
+  async finalizarRuta(@Param('id', ParseIntPipe) id: number) {
+    return this.geoRutasService.update(id, { status: RutaStatus.FINALIZADA });
   }
 
   /** ESTE ES EL NUEVO GET PARA QUE SE PUEDAN OPTENER

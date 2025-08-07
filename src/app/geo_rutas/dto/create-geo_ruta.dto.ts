@@ -9,7 +9,10 @@ import {
   IsArray,
   ValidateNested,
   IsOptional,
+  IsEnum,
 } from 'class-validator';
+
+import { RutaStatus } from '../entities/geo_ruta.entity';
 
 export class CreateGeoRutaDto {
   @IsInt()
@@ -20,10 +23,12 @@ export class CreateGeoRutaDto {
   @IsNotEmpty()
   idUnidadTransporte: number;
 
-
   // CORREGIDO: El nombre de la propiedad ahora es 'kmlInicial'
   @IsString()
   @IsOptional() // Se hace opcional para coincidir con la entidad (nullable: true)
   kmInicial?: string;
 
+  @IsEnum(RutaStatus)
+  @IsOptional()
+  status?: RutaStatus;
 }

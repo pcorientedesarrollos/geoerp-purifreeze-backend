@@ -9,6 +9,14 @@ import {
   OneToMany,
 } from 'typeorm';
 
+//PARTE NUEVA TAMBIEN
+export enum RutaStatus {
+  PLANEADA = 'PLANEADA',
+  EN_CURSO = 'EN_CURSO',
+  FINALIZADA = 'FINALIZADA',
+  CANCELADA = 'CANCELADA',
+}
+
 @Entity('geo_rutas')
 export class GeoRutaEntity {
   @PrimaryGeneratedColumn()
@@ -26,6 +34,14 @@ export class GeoRutaEntity {
   // CORRECCIÓN: Asegurándonos de que el nombre de la columna sea 'kmInicial'
   @Column({ name: 'kmInicial', type: 'varchar', length: 255 })
   kmInicial: string;
+
+  //ESTO LO AGREGUE Y ES NUEVO
+  @Column({
+    type: 'enum',
+    enum: RutaStatus,
+    default: RutaStatus.PLANEADA, // Por defecto, una ruta nueva está "Planeada"
+  })
+  status: RutaStatus;
 
   @OneToMany(() => GeoRutaDetalleEntity, (detalle) => detalle.ruta)
   detalles: GeoRutaDetalleEntity[];
