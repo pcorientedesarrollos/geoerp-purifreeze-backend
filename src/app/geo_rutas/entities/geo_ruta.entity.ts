@@ -39,10 +39,10 @@ export class GeoRutaEntity {
   @Column({
     type: 'enum',
     enum: RutaStatus,
-    default: RutaStatus.PLANEADA, // Por defecto, una ruta nueva está "Planeada"
+    default: RutaStatus.PLANEADA,
+    name: 'statusRuta', // <--- ¡ESTA ES LA LÍNEA CLAVE!
   })
   status: RutaStatus;
-
   @OneToMany(() => GeoRutaDetalleEntity, (detalle) => detalle.ruta)
   detalles: GeoRutaDetalleEntity[];
 }
