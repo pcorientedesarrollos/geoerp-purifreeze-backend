@@ -28,7 +28,7 @@ export class GeoRutasDetalleService {
           es.nombreEquipo, 
           sq.fechaServicio, 
           sq.hora,
-          sq.tipo_servicio, 
+          sq.tipo_servicio AS tipoServicio, 
           sq.descripcion, 
           sq.observaciones_servicio,  
           sq.idContrato, 
