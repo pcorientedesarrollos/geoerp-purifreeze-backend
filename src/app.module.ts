@@ -16,6 +16,7 @@ import { GeoUnidadesTransporteModule } from './app/geo_unidades-transporte/geo_u
 import { GeoClientesDireccionModule } from './app/geo_clientes-direccion/geo_clientes-direccion.module';
 import { GeoRecorridoModule } from './app/geo-recorrido/geo-recorrido.module';
 import { GeoServiciosModule } from './app/geo_servicios/geo_servicios.module';
+import { GeoStatusModule } from './app/geo_status/geo_status.module';
 
 config();
 
@@ -48,6 +49,7 @@ config();
     GeoClientesDireccionModule,
     GeoRecorridoModule,
     GeoServiciosModule,
+    GeoStatusModule,
   ],
 
   controllers: [AppController],
