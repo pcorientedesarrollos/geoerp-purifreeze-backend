@@ -28,7 +28,7 @@ export class GeoRutasDetalleService {
           es.nombreEquipo, 
           sq.fechaServicio, 
           sq.hora,
-          sq.tipo_servicio, 
+          sq.tipo_servicio AS tipoServicio, 
           sq.descripcion, 
           sq.observaciones_servicio,  
           sq.idContrato, 
@@ -46,6 +46,27 @@ export class GeoRutasDetalleService {
     `;
     return this.entityManager.query(rawQuery);
   }
+
+   async obtenerCoordenadas(idRuta: number) {
+      const query = `
+                  SELECT 
+                      gr.idRuta,
+                      grd.idRutaDetalle,
+                      c.nombreComercio,
+                      cd.direccion,
+                      TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', 1)) AS latitud,
+                      TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', -1)) AS longitud
+                  FROM geo_rutas gr
+                  JOIN geo_rutasDetalle grd ON gr.idRuta = grd.idRuta
+                  JOIN servicios_equipos se ON grd.idServicioEquipo = se.idServicioEquipo
+                  JOIN equipos_cliente ec ON se.idContrato = ec.idEquipoCliente
+                  JOIN clientes c ON ec.idCliente = c.idcliente
+                  JOIN cliente_direcciones cd ON c.idcliente = cd.idCliente
+                  WHERE gr.idRuta = ?
+                    AND cd.nombreSucursal REGEXP '^-?[0-9]+\\.?[0-9][[:space:]]?,[[:space:]]?-?[0-9]+\\.?[0-9]$'
+                  GROUP BY c.nombreComercio, cd.direccion, latitud, longitud`;  
+      return await this.detalleRepository.query(query, [idRuta]);
+    }
 
   findAll(): Promise<GeoRutaDetalleEntity[]> {
     return this.detalleRepository.find({ relations: ['ruta'] });

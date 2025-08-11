@@ -1,4 +1,4 @@
-// Contenido Completo y Final para: src/app/geo_rutas/geo_rutas.service.ts
+// Contenido Final, Completo y Fusionado para: src/app/geo_rutas/geo_rutas.service.ts
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +9,7 @@ import { GeoRutaEntity, RutaStatus } from './entities/geo_ruta.entity';
 import { GeoRecorridoEntity } from '../geo-recorrido/entities/geo-recorrido.entity';
 import { GeoUnidadesTransporte } from '../geo_unidades-transporte/entities/geo_unidades-transporte.entity';
 
-// Interfaz para la ubicación de cada CLIENTE (usada en tu query)
+// Interfaz para la ubicación de cada CLIENTE (de tu código original)
 export interface ClienteGeolocalizado {
   nombreComercio: string;
   direccion: string;
@@ -23,7 +23,7 @@ export class GeoRutasService {
     @InjectRepository(GeoRutaEntity)
     private readonly geoRutaRepository: Repository<GeoRutaEntity>,
 
-    // Inyección necesaria para la nueva funcionalidad de cálculo
+    // ¡NUEVA INYECCIÓN! Necesaria para buscar los puntos del recorrido GPS.
     @InjectRepository(GeoRecorridoEntity)
     private readonly recorridoRepository: Repository<GeoRecorridoEntity>,
 
@@ -31,7 +31,7 @@ export class GeoRutasService {
   ) {}
 
   // ================================================================
-  // MÉTODOS CRUD BÁSICOS (Respetando tu implementación)
+  // MÉTODOS DE TU CÓDIGO ORIGINAL (Respetados y mantenidos)
   // ================================================================
 
   async create(createGeoRutaDto: CreateGeoRutaDto): Promise<GeoRutaEntity> {
@@ -42,7 +42,7 @@ export class GeoRutasService {
   findAll(): Promise<GeoRutaEntity[]> {
     return this.geoRutaRepository.find({
       order: { idRuta: 'DESC' },
-      // Se añaden relations para que los datos estén disponibles en otras funciones
+      // Se añade la relación para que la unidad (y su rendimiento) estén disponibles.
       relations: ['detalles', 'unidadTransporte'],
     });
   }
@@ -60,6 +60,7 @@ export class GeoRutasService {
     return ruta;
   }
 
+  // Modificado ligeramente para aceptar la actualización de statusRuta desde el DTO
   async update(
     id: number,
     updateDto: Partial<UpdateGeoRutaDto & { statusRuta: RutaStatus }>,
@@ -85,10 +86,6 @@ export class GeoRutasService {
     }
     return { message: `La ruta con el ID #${id} ha sido eliminada.` };
   }
-
-  // ================================================================
-  // TUS QUERYS PERSONALIZADAS (Respetadas 100%)
-  // ================================================================
 
   async obtenerResumenRutas() {
     const query = `
@@ -138,16 +135,14 @@ export class GeoRutasService {
       relations: ['unidadTransporte'],
     });
 
-    if (!ruta) {
+    if (!ruta)
       throw new NotFoundException(
         `La ruta con ID #${idRuta} no fue encontrada.`,
       );
-    }
-    if (!ruta.unidadTransporte) {
+    if (!ruta.unidadTransporte)
       throw new NotFoundException(
         `La unidad de transporte para la ruta #${idRuta} no fue encontrada.`,
       );
-    }
 
     const puntosRecorrido = await this.recorridoRepository.find({
       where: { idRuta },
@@ -155,8 +150,6 @@ export class GeoRutasService {
     });
 
     let distanciaTotalKm = 0;
-    let consumoEstimadoLitros = 0;
-
     if (puntosRecorrido.length > 1) {
       for (let i = 0; i < puntosRecorrido.length - 1; i++) {
         distanciaTotalKm += this.haversineDistance(
@@ -166,6 +159,7 @@ export class GeoRutasService {
       }
     }
 
+    let consumoEstimadoLitros = 0;
     const rendimiento = ruta.unidadTransporte.rendimientoKmL;
     if (rendimiento && rendimiento > 0 && distanciaTotalKm > 0) {
       consumoEstimadoLitros = distanciaTotalKm / rendimiento;
@@ -182,12 +176,11 @@ export class GeoRutasService {
     coords1: { latitud: number; longitud: number },
     coords2: { latitud: number; longitud: number },
   ): number {
-    const R = 6371; // Radio de la Tierra en km
+    const R = 6371;
     const dLat = this.toRad(coords2.latitud - coords1.latitud);
     const dLon = this.toRad(coords2.longitud - coords1.longitud);
     const lat1 = this.toRad(coords1.latitud);
     const lat2 = this.toRad(coords2.latitud);
-
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
