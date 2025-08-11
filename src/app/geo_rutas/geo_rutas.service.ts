@@ -302,22 +302,19 @@ export class GeoRutasService {
    * Si necesitas una consulta personalizada para una vista de resumen, puedes mantenerla.
    * He eliminado 'idTipoServicio' ya que no pertenece al encabezado de la ruta.
    */
-  async obtenerResumenRutas() {
-    const query = `
-     SELECT
-        gr.idRuta,
-        u.usuario,
-        gut.nombreUnidad,
-        gr.kmInicial,
-        gr.fecha_hora
-      FROM geo_rutas gr
-      LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario
-      LEFT JOIN geo_unidadTransporte gut ON gut.idUnidadTransporte = gr.idUnidadTransporte
-      ORDER BY idRuta DESC
-    `;
-
-    return await this.geoRutaRepository.query(query);
-  }
+   async obtenerResumenRutas() {
+       const query = `
+       select  gr.idRuta ,
+          u.usuario , 
+          gut.nombreUnidad , 
+         
+          gr.fecha_hora 
+        from geo_rutas gr 
+        inner join usuarios u on u.idUsuario = gr.idUsuario 
+        inner join geo_unidadTransporte gut on  gut.idUnidadTransporte = gr.idUnidadTransporte 
+       `;
+        return await this.geoRutaRepository.query(query);
+    }
   async findClientesGeolocalizadosParaRuta(
     idRuta: number,
   ): Promise<ClienteGeolocalizado[]> {

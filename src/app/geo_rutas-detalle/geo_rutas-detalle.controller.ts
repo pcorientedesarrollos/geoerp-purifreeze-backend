@@ -65,4 +65,9 @@ export class GeoRutasDetalleController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasDetalleService.remove(id);
   }
+
+   @Get('coordenadas/:id')
+    async coordenadas(@Param('id') id: number) {
+      return this.geoRutasDetalleService.obtenerCoordenadas(Number(id));
+    }
 }

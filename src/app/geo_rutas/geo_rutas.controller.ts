@@ -71,5 +71,5 @@ export class GeoRutasController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasService.remove(id);
-  }
+  }   
 }
