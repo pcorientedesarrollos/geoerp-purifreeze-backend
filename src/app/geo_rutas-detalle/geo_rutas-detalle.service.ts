@@ -35,11 +35,11 @@ export class GeoRutasDetalleService {
           cl.nombreComercio
       FROM 
           servicios_equipos sq 
-      LEFT JOIN 
+      INNER JOIN 
           equipos_serie es ON sq.idEquipoCliente = es.idEquipoSerie
-      LEFT JOIN 
+      INNER JOIN 
           equipos_cliente ec ON sq.idContrato = ec.idEquipoCliente
-      LEFT JOIN 
+      INNER JOIN 
           clientes cl ON ec.idCliente = cl.idcliente
       WHERE 
           sq.status = 'CONFIRMADO';
