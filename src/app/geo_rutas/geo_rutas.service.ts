@@ -307,7 +307,6 @@ export class GeoRutasService {
        select  gr.idRuta ,
           u.usuario , 
           gut.nombreUnidad , 
-         
           gr.fecha_hora 
         from geo_rutas gr 
         inner join usuarios u on u.idUsuario = gr.idUsuario 
@@ -332,7 +331,7 @@ export class GeoRutasService {
       JOIN cliente_direcciones cd ON c.idcliente = cd.idCliente
       WHERE gr.idRuta = ?
         AND cd.nombreSucursal REGEXP '^-?[0-9]+\\\.?[0-9]*[[:space:]]?,[[:space:]]?-?[0-9]+\\\.?[0-9]*$'
-      GROUP BY c.nombreComercio, cd.direccion, latitud, longitud;
+      GROUP BY c.nombreComercio, cd.direccion, latitud, longitud
     `;
     // Pasamos el idRuta como parámetro a la consulta
     return this.entityManager.query(query, [idRuta]);
