@@ -45,4 +45,9 @@ export class GeoRecorridoController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.geoRecorridoService.remove(id);
   }
+
+  @Get('recorrido/:id')
+    async recorrido(@Param('id') id: number) {
+      return this.geoRecorridoService.obtenerrecorrido(Number(id));
+    }
 }

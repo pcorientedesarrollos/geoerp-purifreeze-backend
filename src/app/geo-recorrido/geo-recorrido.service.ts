@@ -17,6 +17,15 @@ export class GeoRecorridoService {
     return this.recorridoRepository.save(nuevoRecorrido);
   }
 
+  async obtenerrecorrido(idRuta: number) {
+      const query = `
+                  SELECT latitud,longitud
+                  FROM geo_recorrido
+                  WHERE idRuta =?
+          `;  
+      return await this.recorridoRepository.query(query, [idRuta]);
+    }
+
   findAll(): Promise<GeoRecorridoEntity[]> {
     return this.recorridoRepository.find({
       order: { fechaHora: 'DESC' },
