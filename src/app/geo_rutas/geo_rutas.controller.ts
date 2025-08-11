@@ -1,5 +1,3 @@
-// src/geo_rutas/geo_rutas.controller.ts
-
 import {
   Controller,
   Get,
@@ -19,10 +17,7 @@ import { RutaStatus } from './entities/geo_ruta.entity';
 export class GeoRutasController {
   constructor(private readonly geoRutasService: GeoRutasService) {}
 
-  @Get('resumen')
-  getResumenRutas() {
-    return this.geoRutasService.obtenerResumenRutas();
-  }
+  // ===================== Endpoints Estándar (CRUD) =====================
 
   @Post()
   create(@Body() createGeoRutaDto: CreateGeoRutaDto) {
@@ -34,27 +29,16 @@ export class GeoRutasController {
     return this.geoRutasService.findAll();
   }
 
+  @Get('resumen')
+  getResumenRutas() {
+    return this.geoRutasService.obtenerResumenRutas();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasService.findOne(id);
   }
 
-  //ENDPOINTS PARA LA APP DE FLUTTER
-
-  @Patch(':id/iniciar')
-  async iniciarRuta(@Param('id', ParseIntPipe) id: number) {
-    return this.geoRutasService.update(id, { status: RutaStatus.EN_CURSO });
-  }
-
-  @Patch(':id/finalizar')
-  async finalizarRuta(@Param('id', ParseIntPipe) id: number) {
-    return this.geoRutasService.update(id, { status: RutaStatus.FINALIZADA });
-  }
-
-  /** ESTE ES EL NUEVO GET PARA QUE SE PUEDAN OPTENER
-   * Expone la funcionalidad para obtener los clientes geolocalizados de una ruta.
-   * Se accede a través de GET /api/geo-rutas/:id/clientes-geolocalizados
-   */
   @Get(':id/clientes-geolocalizados')
   getClientesGeolocalizados(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasService.findClientesGeolocalizadosParaRuta(id);
@@ -71,5 +55,19 @@ export class GeoRutasController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasService.remove(id);
+  }
+
+  // ===================== Endpoints para Control de Ruta (Flutter App) =====================
+
+  @Patch(':id/iniciar')
+  iniciarRuta(@Param('id', ParseIntPipe) id: number) {
+    // Actualiza el estado de la ruta a 'EN_CURSO'
+    return this.geoRutasService.update(id, { statusRuta: RutaStatus.EN_CURSO });
+  }
+
+  @Patch(':id/finalizar')
+  finalizarRuta(@Param('id', ParseIntPipe) id: number) {
+    // Llama al método especial que cambia el estado Y hace todos los cálculos de distancia y consumo
+    return this.geoRutasService.finalizarYCalcularRuta(id);
   }
 }

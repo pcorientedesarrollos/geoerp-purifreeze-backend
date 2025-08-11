@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateGeoUnidadesTransporteDto {
   @IsInt()
@@ -26,4 +26,9 @@ export class CreateGeoUnidadesTransporteDto {
   @IsOptional()
   @IsInt()
   activo?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0) // El rendimiento no puede ser negativo
+  rendimientoKmL?: number;
 }

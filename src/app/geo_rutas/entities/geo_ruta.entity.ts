@@ -1,15 +1,17 @@
-// En tu proyecto de NestJS: src/app/geo_rutas/entities/geo_ruta.entity.ts
+// Contenido Completo y Final para: src/app/geo_rutas/entities/geo_ruta.entity.ts
 
 import { GeoRutaDetalleEntity } from 'src/app/geo_rutas-detalle/entities/geo_rutas-detalle.entity';
+import { GeoUnidadesTransporte } from 'src/app/geo_unidades-transporte/entities/geo_unidades-transporte.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   OneToMany,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 
-//PARTE NUEVA TAMBIEN
 export enum RutaStatus {
   PLANEADA = 'PLANEADA',
   EN_CURSO = 'EN_CURSO',
@@ -31,18 +33,30 @@ export class GeoRutaEntity {
   @CreateDateColumn({ name: 'fecha_hora', type: 'datetime' })
   fechaHora: Date;
 
-  // CORRECCIÓN: Asegurándonos de que el nombre de la columna sea 'kmInicial'
-  @Column({ name: 'kmInicial', type: 'varchar', length: 255 })
+  @Column({ name: 'kmInicial', type: 'varchar', length: 255, nullable: true })
   kmInicial: string;
 
-  //ESTO LO AGREGUE Y ES NUEVO
+  // ===================== CORRECCIÓN APLICADA AQUÍ =====================
   @Column({
     type: 'enum',
     enum: RutaStatus,
     default: RutaStatus.PLANEADA,
-    name: 'statusRuta', // <--- ¡ESTA ES LA LÍNEA CLAVE!
+    name: 'statusRuta',
   })
-  status: RutaStatus;
+  // El nombre de la propiedad ahora coincide con el 'name' y con el servicio.
+  statusRuta: RutaStatus;
+  // =====================================================================
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  distanciaTotalKm: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  consumoEstimadoLitros: number;
+
   @OneToMany(() => GeoRutaDetalleEntity, (detalle) => detalle.ruta)
   detalles: GeoRutaDetalleEntity[];
+
+  @ManyToOne(() => GeoUnidadesTransporte)
+  @JoinColumn({ name: 'idUnidadTransporte' })
+  unidadTransporte: GeoUnidadesTransporte;
 }

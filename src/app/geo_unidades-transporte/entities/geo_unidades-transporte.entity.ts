@@ -40,4 +40,7 @@ export class GeoUnidadesTransporte {
 
   @Column({ default: 1 })
   activo: number;
+
+  @Column({ type: 'decimal', precision: 5, scale: 2, nullable: true })
+  rendimientoKmL: number;
 }
