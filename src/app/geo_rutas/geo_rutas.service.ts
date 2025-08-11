@@ -1,209 +1,14 @@
-// // src/geo_rutas/geo_rutas.service.ts
-
-// import { Injectable, NotFoundException } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
-// import { CreateGeoRutaDto } from './dto/create-geo_ruta.dto';
-// import { UpdateGeoRutaDto } from './dto/update-geo_ruta.dto';
-// import { GeoRutaEntity } from './entities/geo_ruta.entity';
-
-// @Injectable()
-// export class GeoRutasService {
-//   constructor(
-//     @InjectRepository(GeoRutaEntity)
-//     private readonly geoRutaRepository: Repository<GeoRutaEntity>,
-//   ) {}
-
-//   async obtenerResumenRutas() {
-//     // CORREGIDO: Se eliminó la unión con la tabla 'clientes' y el campo 'nombreComercio'
-//     // ya que 'idCliente' no existe en 'geo_rutas'.
-//     const query = `
-//      SELECT
-//         gr.idRuta,
-//         u.usuario,
-//         gut.nombreUnidad,
-//         gr.kmlInicial,
-//         gr.fecha_hora,
-//         gr.idTipoServicio
-//       FROM geo_rutas gr
-//       LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario
-//       LEFT JOIN geo_unidadTransporte gut ON gut.idUnidadTransporte = gr.idUnidadTransporte
-//       ORDER BY idRuta DESC
-//     `;
-//     return await this.geoRutaRepository.query(query);
-//   }
-
-// async create(createGeoRutaDto: CreateGeoRutaDto): Promise<GeoRutaEntity> {
-//   const nuevaRuta = this.geoRutaRepository.create(createGeoRutaDto);
-//   return this.geoRutaRepository.save(nuevaRuta);
-// }
-
-//   findAll(): Promise<GeoRutaEntity[]> {
-//     return this.geoRutaRepository.find({
-//       order: { idRuta: 'DESC' }, // Es común ordenar por ID para ver las más recientes
-//       relations: ['paradas'],
-//     });
-//   }
-
-//   async findOne(id: number): Promise<GeoRutaEntity> {
-//     const ruta = await this.geoRutaRepository.findOne({
-//       where: { idRuta: id },
-//       relations: ['paradas', 'detalles'], // Carga ambas relaciones
-//     });
-//     if (!ruta) {
-//       throw new NotFoundException(
-//         `La ruta con el ID #${id} no fue encontrada.`,
-//       );
-//     }
-//     return ruta;
-//   }
-
-//   async update(
-//     id: number,
-//     updateGeoRutaDto: UpdateGeoRutaDto,
-//   ): Promise<GeoRutaEntity> {
-//     // Asegúrate de que las paradas no se eliminen si no se envían en el DTO de actualización
-//     const rutaExistente = await this.findOne(id);
-//     const rutaActualizada = this.geoRutaRepository.merge(
-//       rutaExistente,
-//       updateGeoRutaDto,
-//     );
-
-//     return this.geoRutaRepository.save(rutaActualizada);
-//   }
-
-//   async remove(id: number): Promise<{ message: string }> {
-//     const result = await this.geoRutaRepository.delete(id);
-//     if (result.affected === 0) {
-//       throw new NotFoundException(
-//         `La ruta con el ID #${id} no fue encontrada para eliminar.`,
-//       );
-//     }
-//     return { message: `La ruta con el ID #${id} ha sido eliminada.` };
-//   }
-// }
-
-// import { Injectable, NotFoundException } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
-// import { CreateGeoRutaDto } from './dto/create-geo_ruta.dto';
-// import { UpdateGeoRutaDto } from './dto/update-geo_ruta.dto';
-// import { GeoRutaEntity } from './entities/geo_ruta.entity';
-// // ¡Importante! Asegúrate de que la ruta a tu entidad de Parada sea correcta
-// import { GeoRutasParadaEntity } from 'src/app/geo-rutas-paradas/entities/geo-rutas-parada.entity';
-
-// @Injectable()
-// export class GeoRutasService {
-//   constructor(
-//     @InjectRepository(GeoRutaEntity)
-//     private readonly geoRutaRepository: Repository<GeoRutaEntity>,
-
-//     // Inyectamos el repositorio de Paradas para poder usarlo directamente
-//     @InjectRepository(GeoRutasParadaEntity)
-//     private readonly paradaRepository: Repository<GeoRutasParadaEntity>,
-//   ) {}
-
-//   async obtenerResumenRutas() {
-//     // Tu código existente aquí...
-//     const query = `
-//      SELECT
-//         gr.idRuta,
-//         u.usuario,
-//         gut.nombreUnidad,
-//         gr.kmlInicial,
-//         gr.fecha_hora,
-//         gr.idTipoServicio
-//       FROM geo_rutas gr
-//       LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario
-//       LEFT JOIN geo_unidadTransporte gut ON gut.idUnidadTransporte = gr.idUnidadTransporte
-//       ORDER BY idRuta DESC
-//     `;
-//     return await this.geoRutaRepository.query(query);
-//   }
-
-//   // --- MÉTODO CREATE CORREGIDO Y ROBUSTO ---
-//   async create(createGeoRutaDto: CreateGeoRutaDto): Promise<GeoRutaEntity> {
-//     // 1. Separamos las paradas del resto de los datos de la ruta
-//     const { paradas, ...rutaData } = createGeoRutaDto;
-
-//     // 2. Creamos y guardamos la entidad de la ruta principal PRIMERO.
-//     // Esto es crucial porque genera el 'idRuta' que necesitamos para las paradas.
-//     const nuevaRuta = this.geoRutaRepository.create(rutaData);
-//     const rutaGuardada = await this.geoRutaRepository.save(nuevaRuta);
-
-//     // 3. Verificamos si se proporcionaron paradas en la solicitud
-//     if (paradas && paradas.length > 0) {
-//       // 4. Mapeamos cada DTO de parada a una entidad de parada,
-//       //    asignando explícitamente el ID de la ruta que acabamos de guardar.
-//       const paradasAGuardar = paradas.map(paradaDto =>
-//         this.paradaRepository.create({
-//           ...paradaDto,
-//           ruta: rutaGuardada, // Vinculamos la parada a la entidad de ruta completa
-//         })
-//       );
-
-//       // 5. Guardamos todas las entidades de parada en la base de datos de una sola vez.
-//       await this.paradaRepository.save(paradasAGuardar);
-//     }
-
-//     // 6. Volvemos a buscar la ruta guardada, pero esta vez cargando la relación 'paradas'
-//     //    para devolver el objeto completo y consistente al frontend.
-//     return this.findOne(rutaGuardada.idRuta);
-//   }
-
-//   findAll(): Promise<GeoRutaEntity[]> {
-//     return this.geoRutaRepository.find({
-//       order: { idRuta: 'DESC' },
-//       relations: ['paradas'],
-//     });
-//   }
-
-//   async findOne(id: number): Promise<GeoRutaEntity> {
-//     const ruta = await this.geoRutaRepository.findOne({
-//       where: { idRuta: id },
-//       relations: ['paradas', 'detalles'],
-//     });
-//     if (!ruta) {
-//       throw new NotFoundException(
-//         `La ruta con el ID #${id} no fue encontrada.`,
-//       );
-//     }
-//     return ruta;
-//   }
-
-//   async update(
-//     id: number,
-//     updateGeoRutaDto: UpdateGeoRutaDto,
-//   ): Promise<GeoRutaEntity> {
-//     const rutaExistente = await this.findOne(id);
-//     const rutaActualizada = this.geoRutaRepository.merge(
-//       rutaExistente,
-//       updateGeoRutaDto,
-//     );
-//     return this.geoRutaRepository.save(rutaActualizada);
-//   }
-
-//   async remove(id: number): Promise<{ message: string }> {
-//     const result = await this.geoRutaRepository.delete(id);
-//     if (result.affected === 0) {
-//       throw new NotFoundException(
-//         `La ruta con el ID #${id} no fue encontrada para eliminar.`,
-//       );
-//     }
-//     return { message: `La ruta con el ID #${id} ha sido eliminada.` };
-//   }
-// }
-
-// En tu proyecto NestJS: src/app/geo_rutas/geo_rutas.service.ts
+// RUTA COMPLETA: src/app/geo_rutas/geo_rutas.service.ts
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
+import { GeoRutaEntity, RutaStatus } from './entities/geo_ruta.entity';
+import { GeoRecorridoEntity } from '../geo-recorrido/entities/geo-recorrido.entity';
+import { GeoUnidadesTransporte } from '../geo_unidades-transporte/entities/geo_unidades-transporte.entity';
 import { CreateGeoRutaDto } from './dto/create-geo_ruta.dto';
 import { UpdateGeoRutaDto } from './dto/update-geo_ruta.dto';
-import { GeoRutaEntity } from './entities/geo_ruta.entity';
 
-//Interfaz para la ubicacion de cada CLIENTE
 export interface ClienteGeolocalizado {
   nombreComercio: string;
   direccion: string;
@@ -216,41 +21,29 @@ export class GeoRutasService {
   constructor(
     @InjectRepository(GeoRutaEntity)
     private readonly geoRutaRepository: Repository<GeoRutaEntity>,
+    @InjectRepository(GeoRecorridoEntity)
+    private readonly recorridoRepository: Repository<GeoRecorridoEntity>,
+    @InjectRepository(GeoUnidadesTransporte)
+    private readonly unidadRepository: Repository<GeoUnidadesTransporte>,
     private readonly entityManager: EntityManager,
   ) {}
 
-  /**
-   * ================================================================
-   * MÉTODO CREATE - CORREGIDO PARA LA NUEVA LÓGICA
-   * ================================================================
-   * Este método ahora es mucho más simple. Solo recibe los datos del encabezado
-   * (idUsuario, idUnidadTransporte, kmInicial) desde el DTO, crea la entidad
-   * y la guarda. Devuelve la entidad recién creada con el idRuta generado.
-   */
-  async create(createGeoRutaDto: CreateGeoRutaDto): Promise<GeoRutaEntity> {
-    // El DTO ahora solo contiene los datos del encabezado, sin 'paradas'.
+  create(createGeoRutaDto: CreateGeoRutaDto): Promise<GeoRutaEntity> {
     const nuevaRuta = this.geoRutaRepository.create(createGeoRutaDto);
     return this.geoRutaRepository.save(nuevaRuta);
   }
 
-  /**
-   * Devuelve todas las rutas maestras, ordenadas por la más reciente.
-   * La relación 'detalles' se carga para ver las paradas asociadas.
-   */
   findAll(): Promise<GeoRutaEntity[]> {
     return this.geoRutaRepository.find({
       order: { idRuta: 'DESC' },
-      relations: ['detalles'], // Cargamos la relación con los detalles
+      relations: ['detalles'],
     });
   }
 
-  /**
-   * Busca una ruta específica por su ID y carga sus detalles asociados.
-   */
   async findOne(id: number): Promise<GeoRutaEntity> {
     const ruta = await this.geoRutaRepository.findOne({
       where: { idRuta: id },
-      relations: ['detalles'], // Asegúrate de cargar los detalles
+      relations: ['detalles'],
     });
     if (!ruta) {
       throw new NotFoundException(
@@ -260,33 +53,22 @@ export class GeoRutasService {
     return ruta;
   }
 
-  /**
-   * Actualiza los datos del encabezado de una ruta.
-   * Este método no modificará los detalles asociados.
-   */
   async update(
     id: number,
-    updateGeoRutaDto: UpdateGeoRutaDto,
+    updateDto: Partial<UpdateGeoRutaDto & { statusRuta: RutaStatus }>,
   ): Promise<GeoRutaEntity> {
-    // Preload busca la entidad y la fusiona con los nuevos datos del DTO.
     const rutaActualizada = await this.geoRutaRepository.preload({
       idRuta: id,
-      ...updateGeoRutaDto,
+      ...updateDto,
     });
-
     if (!rutaActualizada) {
       throw new NotFoundException(
         `La ruta con el ID #${id} no fue encontrada para actualizar.`,
       );
     }
-
     return this.geoRutaRepository.save(rutaActualizada);
   }
 
-  /**
-   * Elimina una ruta. Gracias a 'onDelete: CASCADE' en la entidad GeoRutaDetalle,
-   * al eliminar una ruta, todos sus detalles asociados también se eliminarán automáticamente.
-   */
   async remove(id: number): Promise<{ message: string }> {
     const result = await this.geoRutaRepository.delete(id);
     if (result.affected === 0) {
@@ -307,6 +89,7 @@ export class GeoRutasService {
        select  gr.idRuta ,
           u.usuario , 
           gut.nombreUnidad , 
+         
           gr.fecha_hora 
         from geo_rutas gr 
         inner join usuarios u on u.idUsuario = gr.idUsuario 
@@ -318,11 +101,9 @@ export class GeoRutasService {
     idRuta: number,
   ): Promise<ClienteGeolocalizado[]> {
     const query = `
-      SELECT
-          c.nombreComercio,
-          cd.direccion,
-          TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', 1)) AS latitud,
-          TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', -1)) AS longitud
+      SELECT c.nombreComercio, cd.direccion,
+             TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', 1)) AS latitud,
+             TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', -1)) AS longitud
       FROM geo_rutas gr
       JOIN geo_rutasDetalle grd ON gr.idRuta = grd.idRuta
       JOIN servicios_equipos se ON grd.idServicioEquipo = se.idServicioEquipo
@@ -333,7 +114,68 @@ export class GeoRutasService {
         AND cd.nombreSucursal REGEXP '^-?[0-9]+\\\.?[0-9]*[[:space:]]?,[[:space:]]?-?[0-9]+\\\.?[0-9]*$'
       GROUP BY c.nombreComercio, cd.direccion, latitud, longitud
     `;
-    // Pasamos el idRuta como parámetro a la consulta
     return this.entityManager.query(query, [idRuta]);
+  }
+
+  async finalizarYCalcularRuta(idRuta: number): Promise<GeoRutaEntity> {
+    const ruta = await this.geoRutaRepository.findOne({
+      where: { idRuta },
+      relations: ['unidadTransporte'],
+    });
+
+    if (!ruta) {
+      throw new NotFoundException(
+        `La ruta con ID #${idRuta} no fue encontrada.`,
+      );
+    }
+
+    const puntosRecorrido = await this.recorridoRepository.find({
+      where: { idRuta },
+      order: { fechaHora: 'ASC' },
+    });
+
+    let distanciaTotalKm = 0;
+    let consumoEstimadoLitros = 0;
+
+    if (puntosRecorrido.length > 1) {
+      for (let i = 0; i < puntosRecorrido.length - 1; i++) {
+        distanciaTotalKm += this.haversineDistance(
+          puntosRecorrido[i],
+          puntosRecorrido[i + 1],
+        );
+      }
+    }
+
+    const rendimiento = ruta.unidadTransporte?.rendimientoKmL;
+    if (rendimiento && rendimiento > 0 && distanciaTotalKm > 0) {
+      consumoEstimadoLitros = distanciaTotalKm / rendimiento;
+    }
+
+    ruta.statusRuta = RutaStatus.FINALIZADA;
+    ruta.distanciaTotalKm = parseFloat(distanciaTotalKm.toFixed(2));
+    ruta.consumoEstimadoLitros = parseFloat(consumoEstimadoLitros.toFixed(2));
+
+    return this.geoRutaRepository.save(ruta);
+  }
+
+  private haversineDistance(
+    coords1: { latitud: number; longitud: number },
+    coords2: { latitud: number; longitud: number },
+  ): number {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = this.toRad(coords2.latitud - coords1.latitud);
+    const dLon = this.toRad(coords2.longitud - coords1.longitud);
+    const lat1 = this.toRad(coords1.latitud);
+    const lat2 = this.toRad(coords2.latitud);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  private toRad(value: number): number {
+    return (value * Math.PI) / 180;
   }
 }

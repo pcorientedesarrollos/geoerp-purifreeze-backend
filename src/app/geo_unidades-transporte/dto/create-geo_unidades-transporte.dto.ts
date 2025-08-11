@@ -1,14 +1,22 @@
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class CreateGeoUnidadesTransporteDto {
   @IsInt()
+  @IsNotEmpty()
   idTipoUnidad: number;
 
   @IsString()
-  placaUnidad: string;
+  nombreUnidad: string;
 
   @IsString()
-  nombreUnidad: string;
+  placaUnidad: string;
 
   @IsString()
   nivUnidad: string;
@@ -26,4 +34,10 @@ export class CreateGeoUnidadesTransporteDto {
   @IsOptional()
   @IsInt()
   activo?: number;
+
+  // ¡NUEVA PROPIEDAD!
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  rendimientoKmL?: number;
 }
