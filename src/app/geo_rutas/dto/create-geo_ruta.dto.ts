@@ -1,18 +1,8 @@
-// src/geo_rutas/dto/create-geo_ruta.dto.ts
+// Contenido Final y Correcto para: src/app/geo_rutas/dto/create-geo_ruta.dto.ts
 
-import { Type } from 'class-transformer';
-import {
-  IsInt,
-  IsString,
-  IsDateString,
-  IsNotEmpty,
-  IsArray,
-  ValidateNested,
-  IsOptional,
-  IsEnum,
-} from 'class-validator';
+import { IsInt, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
-import { RutaStatus } from '../entities/geo_ruta.entity';
+// Ya no es necesario importar RutaStatus aquí.
 
 export class CreateGeoRutaDto {
   @IsInt()
@@ -23,12 +13,11 @@ export class CreateGeoRutaDto {
   @IsNotEmpty()
   idUnidadTransporte: number;
 
-  // CORREGIDO: El nombre de la propiedad ahora es 'kmlInicial'
   @IsString()
-  @IsOptional() // Se hace opcional para coincidir con la entidad (nullable: true)
+  @IsOptional()
   kmInicial?: string;
 
-  @IsEnum(RutaStatus)
-  @IsOptional()
-  status?: RutaStatus;
+  // La propiedad 'statusRuta' ha sido eliminada de aquí intencionalmente.
+  // El estado inicial 'PLANEADA' se asignará por defecto en la base de datos
+  // al momento de la creación, lo cual es una práctica más segura.
 }
