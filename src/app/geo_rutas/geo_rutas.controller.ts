@@ -17,8 +17,6 @@ import { RutaStatus } from './entities/geo_ruta.entity';
 export class GeoRutasController {
   constructor(private readonly geoRutasService: GeoRutasService) {}
 
-  // ===================== Endpoints Estándar (CRUD) =====================
-
   @Post()
   create(@Body() createGeoRutaDto: CreateGeoRutaDto) {
     return this.geoRutasService.create(createGeoRutaDto);
@@ -27,11 +25,6 @@ export class GeoRutasController {
   @Get()
   findAll() {
     return this.geoRutasService.findAll();
-  }
-
-  @Get('resumen')
-  getResumenRutas() {
-    return this.geoRutasService.obtenerResumenRutas();
   }
 
   @Get(':id')
@@ -52,22 +45,19 @@ export class GeoRutasController {
     return this.geoRutasService.update(id, updateGeoRutaDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.geoRutasService.remove(id);
-  }
-
-  // ===================== Endpoints para Control de Ruta (Flutter App) =====================
-
   @Patch(':id/iniciar')
   iniciarRuta(@Param('id', ParseIntPipe) id: number) {
-    // Actualiza el estado de la ruta a 'EN_CURSO'
     return this.geoRutasService.update(id, { statusRuta: RutaStatus.EN_CURSO });
   }
 
+  // ¡ENDPOINT MODIFICADO!
   @Patch(':id/finalizar')
   finalizarRuta(@Param('id', ParseIntPipe) id: number) {
-    // Llama al método especial que cambia el estado Y hace todos los cálculos de distancia y consumo
     return this.geoRutasService.finalizarYCalcularRuta(id);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.geoRutasService.remove(id);
   }
 }

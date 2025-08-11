@@ -19,11 +19,18 @@ export enum RutaStatus {
 
 @Entity('geo_rutas')
 export class GeoRutaEntity {
-  @PrimaryGeneratedColumn() idRuta: number;
-  @Column({ type: 'int' }) idUsuario: number;
+  @PrimaryGeneratedColumn()
+  idRuta: number;
+
+  @Column({ type: 'int' })
+  idUsuario: number;
+
   @Column({ name: 'idUnidadTransporte', type: 'int' })
   idUnidadTransporte: number;
-  @CreateDateColumn({ name: 'fecha_hora', type: 'datetime' }) fechaHora: Date;
+
+  @CreateDateColumn({ name: 'fecha_hora', type: 'datetime' })
+  fechaHora: Date;
+
   @Column({ name: 'kmInicial', type: 'varchar', length: 255, nullable: true })
   kmInicial: string;
 
@@ -35,6 +42,7 @@ export class GeoRutaEntity {
   })
   statusRuta: RutaStatus;
 
+  // ¡NUEVAS COLUMNAS!
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   distanciaTotalKm: number;
 
@@ -44,6 +52,7 @@ export class GeoRutaEntity {
   @OneToMany(() => GeoRutaDetalleEntity, (detalle) => detalle.ruta)
   detalles: GeoRutaDetalleEntity[];
 
+  // ¡NUEVA RELACIÓN!
   @ManyToOne(() => GeoUnidadesTransporte)
   @JoinColumn({ name: 'idUnidadTransporte' })
   unidadTransporte: GeoUnidadesTransporte;

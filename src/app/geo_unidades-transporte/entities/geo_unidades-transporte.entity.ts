@@ -1,11 +1,10 @@
 import { GeoTipoUnidade } from 'src/app/geo_tipo-unidades/entities/geo_tipo-unidade.entity';
 import {
-  Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity('geo_unidadTransporte')
@@ -15,10 +14,6 @@ export class GeoUnidadesTransporte {
 
   @Column()
   idTipoUnidad: number;
-
-  @ManyToOne(() => GeoTipoUnidade)
-  @JoinColumn({ name: 'idTipoUnidad' })
-  tipoUnidad: GeoTipoUnidade;
 
   @Column()
   nombreUnidad: string;
@@ -35,12 +30,17 @@ export class GeoUnidadesTransporte {
   @Column()
   modeloUnidad: string;
 
-  @Column({ default: 1 })
+  @Column()
   unidadActiva: number;
 
   @Column({ default: 1 })
   activo: number;
 
+  // ¡NUEVA COLUMNA!
   @Column({ type: 'decimal', precision: 5, scale: 2, nullable: true })
   rendimientoKmL: number;
+
+  @ManyToOne(() => GeoTipoUnidade)
+  @JoinColumn({ name: 'idTipoUnidad' })
+  tipoUnidad: GeoTipoUnidade;
 }
