@@ -27,6 +27,12 @@ export class GeoRutasController {
     return this.geoRutasService.findAll();
   }
 
+
+  @Get('resumen')
+  getResumenRutas() {
+    return this.geoRutasService.obtenerResumenRutas();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasService.findOne(id);
