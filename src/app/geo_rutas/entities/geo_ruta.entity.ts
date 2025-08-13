@@ -1,5 +1,6 @@
 import { GeoRutaDetalleEntity } from 'src/app/geo_rutas-detalle/entities/geo_rutas-detalle.entity';
 import { GeoUnidadesTransporte } from 'src/app/geo_unidades-transporte/entities/geo_unidades-transporte.entity';
+import { User } from 'src/app/users/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -56,4 +57,8 @@ export class GeoRutaEntity {
   @ManyToOne(() => GeoUnidadesTransporte)
   @JoinColumn({ name: 'idUnidadTransporte' })
   unidadTransporte: GeoUnidadesTransporte;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'idUsuario' })
+  usuario: User;
 }

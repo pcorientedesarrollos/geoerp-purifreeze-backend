@@ -87,13 +87,13 @@
 //    async obtenerResumenRutas() {
 //        const query = `
 //        select  gr.idRuta ,
-//           u.usuario , 
-//           gut.nombreUnidad , 
-         
-//           gr.fecha_hora 
-//         from geo_rutas gr 
-//         inner join usuarios u on u.idUsuario = gr.idUsuario 
-//         inner join geo_unidadTransporte gut on  gut.idUnidadTransporte = gr.idUnidadTransporte 
+//           u.usuario ,
+//           gut.nombreUnidad ,
+
+//           gr.fecha_hora
+//         from geo_rutas gr
+//         inner join usuarios u on u.idUsuario = gr.idUsuario
+//         inner join geo_unidadTransporte gut on  gut.idUnidadTransporte = gr.idUnidadTransporte
 //        `;
 //         return await this.geoRutaRepository.query(query);
 //     }
@@ -180,7 +180,6 @@
 //   }
 // }
 
-
 // RUTA COMPLETA: src/app/geo_rutas/geo_rutas.service.ts
 
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -215,11 +214,20 @@ export class GeoRutasService {
     const nuevaRuta = this.geoRutaRepository.create(createGeoRutaDto);
     return this.geoRutaRepository.save(nuevaRuta);
   }
-
+  //Antiguo findall donde funcionaba, se cambio al nuevo para traer nombres
+  // findAll(): Promise<GeoRutaEntity[]> {
+  //   return this.geoRutaRepository.find({
+  //     order: { idRuta: 'DESC' },
+  //     relations: ['detalles'],  AGREGAR DETALLES A RELATIONS EN CASO DE PROBLEMAS
+  //   });
+  // }
+  // ESTE ES EL NUEVO
   findAll(): Promise<GeoRutaEntity[]> {
     return this.geoRutaRepository.find({
       order: { idRuta: 'DESC' },
-      relations: ['detalles'],
+      // Le pedimos a TypeORM que cargue las relaciones.
+      // Ahora la respuesta JSON incluirá los objetos completos de usuario y unidad.
+      relations: ['usuario', 'unidadTransporte'],
     });
   }
 
@@ -267,8 +275,8 @@ export class GeoRutasService {
    * Si necesitas una consulta personalizada para una vista de resumen, puedes mantenerla.
    * He eliminado 'idTipoServicio' ya que no pertenece al encabezado de la ruta.
    */
-   async obtenerResumenRutas() {
-       const query = `
+  async obtenerResumenRutas() {
+    const query = `
        select  gr.idRuta ,
           u.usuario , 
           gut.nombreUnidad , 
@@ -278,8 +286,8 @@ export class GeoRutasService {
         inner join usuarios u on u.idUsuario = gr.idUsuario 
         inner join geo_unidadTransporte gut on  gut.idUnidadTransporte = gr.idUnidadTransporte 
        `;
-        return await this.geoRutaRepository.query(query);
-    }
+    return await this.geoRutaRepository.query(query);
+  }
   async findClientesGeolocalizadosParaRuta(
     idRuta: number,
   ): Promise<ClienteGeolocalizado[]> {
