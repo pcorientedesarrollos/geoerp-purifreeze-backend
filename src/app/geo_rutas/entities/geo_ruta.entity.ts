@@ -1,6 +1,8 @@
+// RUTA COMPLETA: src/app/geo_rutas/entities/geo_ruta.entity.ts
+
 import { GeoRutaDetalleEntity } from 'src/app/geo_rutas-detalle/entities/geo_rutas-detalle.entity';
 import { GeoUnidadesTransporte } from 'src/app/geo_unidades-transporte/entities/geo_unidades-transporte.entity';
-import { User } from 'src/app/users/entities/user.entity';
+import { User } from 'src/app/users/entities/user.entity'; // <-- ¡IMPORTACIÓN AÑADIDA!
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -43,21 +45,23 @@ export class GeoRutaEntity {
   })
   statusRuta: RutaStatus;
 
-  // ¡NUEVAS COLUMNAS!
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   distanciaTotalKm: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   consumoEstimadoLitros: number;
 
+  @Column({ type: 'int', nullable: true })
+  duracionMinutos: number;
+
   @OneToMany(() => GeoRutaDetalleEntity, (detalle) => detalle.ruta)
   detalles: GeoRutaDetalleEntity[];
 
-  // ¡NUEVA RELACIÓN!
   @ManyToOne(() => GeoUnidadesTransporte)
   @JoinColumn({ name: 'idUnidadTransporte' })
   unidadTransporte: GeoUnidadesTransporte;
 
+  // Esta relación permite que `findAll` cargue el objeto de usuario completo.
   @ManyToOne(() => User)
   @JoinColumn({ name: 'idUsuario' })
   usuario: User;
