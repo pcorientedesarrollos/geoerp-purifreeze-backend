@@ -18,6 +18,7 @@ export enum RutaStatus {
   EN_CURSO = 'EN_CURSO',
   FINALIZADA = 'FINALIZADA',
   CANCELADA = 'CANCELADA',
+  ELIMINADA = 'ELIMINADA'
 }
 
 @Entity('geo_rutas')

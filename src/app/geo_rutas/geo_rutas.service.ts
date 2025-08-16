@@ -2,7 +2,7 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager } from 'typeorm';
+import { Repository, EntityManager, Not } from 'typeorm';
 import { GeoRutaEntity, RutaStatus } from './entities/geo_ruta.entity';
 import { GeoRecorridoEntity } from '../geo-recorrido/entities/geo-recorrido.entity';
 import { GeoUnidadesTransporte } from '../geo_unidades-transporte/entities/geo_unidades-transporte.entity';
@@ -33,12 +33,22 @@ export class GeoRutasService {
     return this.geoRutaRepository.save(nuevaRuta);
   }
 
-  findAll(): Promise<GeoRutaEntity[]> {
+  // findAll(): Promise<GeoRutaEntity[]> {
+  //   return this.geoRutaRepository.find({
+  //     order: { idRuta: 'DESC' },
+  //     // Le pedimos a TypeORM que cargue las relaciones.
+  //     // Ahora la respuesta JSON incluirá los objetos completos de usuario y unidad.
+  //     relations: ['usuario', 'unidadTransporte', 'detalles'], // Aseguramos que cargue todo lo necesario
+  //   });
+  // }
+
+    findAll(): Promise<GeoRutaEntity[]> {
     return this.geoRutaRepository.find({
+      where: {
+        statusRuta: Not(RutaStatus.ELIMINADA)
+      },
       order: { idRuta: 'DESC' },
-      // Le pedimos a TypeORM que cargue las relaciones.
-      // Ahora la respuesta JSON incluirá los objetos completos de usuario y unidad.
-      relations: ['usuario', 'unidadTransporte', 'detalles'], // Aseguramos que cargue todo lo necesario
+      relations: ['usuario', 'unidadTransporte', 'detalles'],
     });
   }
 
@@ -71,14 +81,10 @@ export class GeoRutasService {
     return this.geoRutaRepository.save(rutaActualizada);
   }
 
-  async remove(id: number): Promise<{ message: string }> {
-    const result = await this.geoRutaRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(
-        `La ruta con el ID #${id} no fue encontrada para eliminar.`,
-      );
-    }
-    return { message: `La ruta con el ID #${id} ha sido eliminada.` };
+  
+  async remove(id: number): Promise<GeoRutaEntity> {
+    const ruta = await this.findOne(id);
+    return this.update(id, { statusRuta: RutaStatus.ELIMINADA });
   }
 
   async obtenerResumenRutas() {

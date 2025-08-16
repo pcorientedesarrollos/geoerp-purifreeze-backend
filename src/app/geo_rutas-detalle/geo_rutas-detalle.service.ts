@@ -73,10 +73,10 @@ export class GeoRutasDetalleService {
     return this.detalleRepository.save(detalle);
   }
 
-  async remove(idRutaDetalle: number): Promise<{ message: string }> {
+  async remove(idRutaDetalle: number): Promise<GeoRutaDetalleEntity> {
     const detalle = await this.findOne(idRutaDetalle);
-    await this.detalleRepository.remove(detalle);
-    return { message: `El detalle de ruta con ID #${idRutaDetalle} ha sido eliminado.` };
+    detalle.status = 5; // Asigna el ID del estado "Eliminado"
+    return this.detalleRepository.save(detalle);
   }
 
   async guardarCoordenada(dto: CreateGeoRutaDetalleDto): Promise<GeoRutaDetalleEntity> {
