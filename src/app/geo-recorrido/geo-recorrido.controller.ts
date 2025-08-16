@@ -13,14 +13,20 @@ import {
 import { GeoRecorridoService } from './geo-recorrido.service';
 import { CreateGeoRecorridoDto } from './dto/create-geo-recorrido.dto';
 import { UpdateGeoRecorridoDto } from './dto/update-geo-recorrido.dto';
+import { EventsGateway } from '../events/events.gateway';
 
 @Controller('geo-recorrido')
 export class GeoRecorridoController {
-  constructor(private readonly geoRecorridoService: GeoRecorridoService) {}
+  constructor(
+    private readonly geoRecorridoService: GeoRecorridoService,
+    private readonly eventsGateway: EventsGateway,
+  ) {}
 
   @Post()
-  create(@Body() createDto: CreateGeoRecorridoDto) {
-    return this.geoRecorridoService.create(createDto);
+  async create(@Body() createDto: CreateGeoRecorridoDto) {
+    const nuevoPunto = await this.geoRecorridoService.create(createDto);
+    this.eventsGateway.emitirNuevaCoordenada('nueva-coordenada', nuevoPunto);
+    return nuevoPunto;
   }
 
   @Get()
@@ -47,7 +53,7 @@ export class GeoRecorridoController {
   }
 
   @Get('recorrido/:id')
-    async recorrido(@Param('id') id: number) {
-      return this.geoRecorridoService.obtenerrecorrido(Number(id));
-    }
+  async recorrido(@Param('id') id: number) {
+    return this.geoRecorridoService.obtenerrecorrido(Number(id));
+  }
 }

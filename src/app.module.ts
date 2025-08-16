@@ -17,6 +17,7 @@ import { GeoClientesDireccionModule } from './app/geo_clientes-direccion/geo_cli
 import { GeoRecorridoModule } from './app/geo-recorrido/geo-recorrido.module';
 import { GeoServiciosModule } from './app/geo_servicios/geo_servicios.module';
 import { GeoStatusModule } from './app/geo_status/geo_status.module';
+import { EventsModule } from './app/events/events.module';
 
 config();
 
@@ -50,6 +51,7 @@ config();
     GeoRecorridoModule,
     GeoServiciosModule,
     GeoStatusModule,
+    EventsModule,
   ],
 
   controllers: [AppController],
