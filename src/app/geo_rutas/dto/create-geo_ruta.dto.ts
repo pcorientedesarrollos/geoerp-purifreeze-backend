@@ -17,6 +17,10 @@ export class CreateGeoRutaDto {
   @IsOptional()
   kmInicial?: string;
 
+    @IsOptional()
+  @IsInt()
+  idEstatus?: number;
+
   // La propiedad 'statusRuta' ha sido eliminada de aquí intencionalmente.
   // El estado inicial 'PLANEADA' se asignará por defecto en la base de datos
   // al momento de la creación, lo cual es una práctica más segura.

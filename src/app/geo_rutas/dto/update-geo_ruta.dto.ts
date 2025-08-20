@@ -3,7 +3,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsEnum, IsInt, IsOptional } from 'class-validator'; 
 import { CreateGeoRutaDto } from './create-geo_ruta.dto';
-import { RutaStatus } from '../entities/geo_ruta.entity'; // ¡Importante importar el Enum!
 
 // PartialType hace que todas las propiedades de CreateGeoRutaDto sean opcionales.
 export class UpdateGeoRutaDto extends PartialType(CreateGeoRutaDto) {
@@ -13,9 +12,9 @@ export class UpdateGeoRutaDto extends PartialType(CreateGeoRutaDto) {
    * @IsEnum valida que el valor sea uno de los definidos en el enum RutaStatus.
    * @IsOptional permite que este campo no sea obligatorio en todas las peticiones PATCH.
    */
-  @IsOptional()
-  @IsEnum(RutaStatus)
-  statusRuta?: RutaStatus;
+  // @IsOptional()
+  // @IsEnum(RutaStatus)
+  // statusRuta?: RutaStatus;
 
 
     /**

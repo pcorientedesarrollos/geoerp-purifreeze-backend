@@ -1,17 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseIntPipe,
-} from '@nestjs/common';
+
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { GeoRutasService } from './geo_rutas.service';
 import { CreateGeoRutaDto } from './dto/create-geo_ruta.dto';
 import { UpdateGeoRutaDto } from './dto/update-geo_ruta.dto';
-import { RutaStatus } from './entities/geo_ruta.entity';
+
+// La importación de 'RutaStatus' ya no es necesaria.
 
 @Controller('geo-rutas')
 export class GeoRutasController {
@@ -27,11 +20,10 @@ export class GeoRutasController {
     return this.geoRutasService.findAll();
   }
 
-
   @Get('resumen')
   getResumenRutas() {
-    return this.geoRutasService.obtenerResumenRutas();
-  }
+    return this.geoRutasService.obtenerResumenRutas(); 
+  }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -44,19 +36,16 @@ export class GeoRutasController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateGeoRutaDto: UpdateGeoRutaDto,
-  ) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateGeoRutaDto: UpdateGeoRutaDto) {
     return this.geoRutasService.update(id, updateGeoRutaDto);
   }
 
   @Patch(':id/iniciar')
   iniciarRuta(@Param('id', ParseIntPipe) id: number) {
-    return this.geoRutasService.update(id, { statusRuta: RutaStatus.EN_CURSO });
+    // Llama al método dedicado en el servicio para mayor claridad
+    return this.geoRutasService.iniciarRuta(id);
   }
 
-  // ¡ENDPOINT MODIFICADO!
   @Patch(':id/finalizar')
   finalizarRuta(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasService.finalizarYCalcularRuta(id);

@@ -1,6 +1,5 @@
 // src/auth/auth.service.ts
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/app/users/users.service';
@@ -12,34 +11,26 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // 1. Valida si el usuario y la contraseña son correctos
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOneByUsername(username);
+
+    // Comparamos la contraseña proporcionada con la hasheada en la BD
     if (user && (await bcrypt.compare(pass, user.clave))) {
-      // Si la contraseña coincide, devolvemos el usuario sin la contraseña
+      // Si es correcta, devolvemos el usuario sin la clave
       const { clave, ...result } = user;
       return result;
     }
     return null;
   }
 
-  // 2. Si la validación es exitosa, crea y devuelve un token de acceso
   async login(user: any) {
     const payload = {
       username: user.usuario,
       sub: user.idUsuario,
-      permissions: user.permiso,
+      permissions: user.permiso, // El permiso viene de la tabla usuarios
     };
     return {
       access_token: this.jwtService.sign(payload),
     };
-  }
-  async loginByUserId(userId: number) {
-    const user = await this.usersService.findOneById(userId);
-    if (!user) {
-      throw new UnauthorizedException('Usuario no encontrado.');
-    }
-    // Reutilizamos el método de login que ya teníamos
-    return this.login(user);
   }
 }

@@ -1,8 +1,8 @@
-// RUTA COMPLETA: src/app/geo_rutas/entities/geo_ruta.entity.ts
 
 import { GeoRutaDetalleEntity } from 'src/app/geo_rutas-detalle/entities/geo_rutas-detalle.entity';
 import { GeoUnidadesTransporte } from 'src/app/geo_unidades-transporte/entities/geo_unidades-transporte.entity';
-import { User } from 'src/app/users/entities/user.entity'; // <-- ¡IMPORTACIÓN AÑADIDA!
+import { User } from 'src/app/users/entities/user.entity';
+import { GeoStatus } from 'src/app/geo_status/entities/geo_status.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -12,14 +12,6 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-
-export enum RutaStatus {
-  PLANEADA = 'PLANEADA',
-  EN_CURSO = 'EN_CURSO',
-  FINALIZADA = 'FINALIZADA',
-  CANCELADA = 'CANCELADA',
-  ELIMINADA = 'ELIMINADA'
-}
 
 @Entity('geo_rutas')
 export class GeoRutaEntity {
@@ -38,13 +30,7 @@ export class GeoRutaEntity {
   @Column({ name: 'kmInicial', type: 'varchar', length: 255, nullable: true })
   kmInicial: string;
 
-  @Column({
-    type: 'enum',
-    enum: RutaStatus,
-    default: RutaStatus.PLANEADA,
-    name: 'statusRuta',
-  })
-  statusRuta: RutaStatus;
+  // <-- ¡CAMBIO IMPORTANTE! La columna 'statusRuta' ha sido eliminada de la entidad.
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   distanciaTotalKm: number;
@@ -55,18 +41,23 @@ export class GeoRutaEntity {
   @Column({ type: 'int', nullable: true })
   duracionMinutos: number;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int', default: 1 }) // El estado por defecto será 1 ('Confirmado' o 'Planeada')
   idEstatus: number;
+
+  // --- RELACIONES ---
 
   @OneToMany(() => GeoRutaDetalleEntity, (detalle) => detalle.ruta)
   detalles: GeoRutaDetalleEntity[];
 
-  @ManyToOne(() => GeoUnidadesTransporte)
+  @ManyToOne(() => GeoUnidadesTransporte, { eager: true })
   @JoinColumn({ name: 'idUnidadTransporte' })
   unidadTransporte: GeoUnidadesTransporte;
 
-  // Esta relación permite que `findAll` cargue el objeto de usuario completo.
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'idUsuario' })
   usuario: User;
+
+  @ManyToOne(() => GeoStatus, { eager: true })
+  @JoinColumn({ name: 'idEstatus' })
+  status: GeoStatus;
 }
