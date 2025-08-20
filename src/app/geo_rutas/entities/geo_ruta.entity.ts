@@ -55,6 +55,9 @@ export class GeoRutaEntity {
   @Column({ type: 'int', nullable: true })
   duracionMinutos: number;
 
+  @Column({ type: 'int', nullable: true })
+  idEstatus: number;
+
   @OneToMany(() => GeoRutaDetalleEntity, (detalle) => detalle.ruta)
   detalles: GeoRutaDetalleEntity[];
 

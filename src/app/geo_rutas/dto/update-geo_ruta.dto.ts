@@ -1,7 +1,7 @@
 // Contenido Final para: src/app/geo_rutas/dto/update-geo_ruta.dto.ts
 
 import { PartialType } from '@nestjs/mapped-types';
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsEnum, IsInt, IsOptional } from 'class-validator'; 
 import { CreateGeoRutaDto } from './create-geo_ruta.dto';
 import { RutaStatus } from '../entities/geo_ruta.entity'; // ¡Importante importar el Enum!
 
@@ -16,6 +16,17 @@ export class UpdateGeoRutaDto extends PartialType(CreateGeoRutaDto) {
   @IsOptional()
   @IsEnum(RutaStatus)
   statusRuta?: RutaStatus;
+
+
+    /**
+   * Propiedad para almacenar el estatus como un número entero.
+   * @IsOptional() permite que este campo sea opcional en la actualización.
+   * @IsInt() asegura que el valor recibido sea un número entero.
+   */
+  @IsOptional()
+  @IsInt()
+  idEstatus?: number;
+
 
   // =====================================================================
 }
