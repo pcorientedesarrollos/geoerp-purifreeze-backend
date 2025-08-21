@@ -1,12 +1,12 @@
+// COPIA Y PEGA ESTE CONTENIDO COMPLETO
 
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { GeoRutasService } from './geo_rutas.service';
 import { CreateGeoRutaDto } from './dto/create-geo_ruta.dto';
 import { UpdateGeoRutaDto } from './dto/update-geo_ruta.dto';
 
-// La importación de 'RutaStatus' ya no es necesaria.
-
 @Controller('geo-rutas')
+@UseInterceptors(ClassSerializerInterceptor) // <-- Activa las reglas @Exclude/@Expose
 export class GeoRutasController {
   constructor(private readonly geoRutasService: GeoRutasService) {}
 
@@ -18,11 +18,6 @@ export class GeoRutasController {
   @Get()
   findAll() {
     return this.geoRutasService.findAll();
-  }
-
-  @Get('resumen')
-  getResumenRutas() {
-    return this.geoRutasService.obtenerResumenRutas(); 
   }
 
   @Get(':id')
@@ -42,7 +37,6 @@ export class GeoRutasController {
 
   @Patch(':id/iniciar')
   iniciarRuta(@Param('id', ParseIntPipe) id: number) {
-    // Llama al método dedicado en el servicio para mayor claridad
     return this.geoRutasService.iniciarRuta(id);
   }
 
@@ -55,4 +49,11 @@ export class GeoRutasController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.geoRutasService.remove(id);
   }
+
+
+    @Get('resumen')
+  getResumenRutas() {
+    return this.geoRutasService.obtenerResumenRutas(); 
+  }
+
 }
