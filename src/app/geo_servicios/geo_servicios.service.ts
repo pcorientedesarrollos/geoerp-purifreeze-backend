@@ -1,35 +1,7 @@
-// import { Injectable } from '@nestjs/common';
-// import { CreateGeoServicioDto } from './dto/create-geo_servicio.dto';
-// import { UpdateGeoServicioDto } from './dto/update-geo_servicio.dto';
-
-// @Injectable()
-// export class GeoServiciosService {
-//   create(createGeoServicioDto: CreateGeoServicioDto) {
-//     return 'This action adds a new geoServicio';
-//   }
-
-//   findAll() {
-//     return `This action returns all geoServicios`;
-//   }
-
-//   findOne(id: number) {
-//     return `This action returns a #${id} geoServicio`;
-//   }
-
-//   update(id: number, updateGeoServicioDto: UpdateGeoServicioDto) {
-//     return `This action updates a #${id} geoServicio`;
-//   }
-
-//   remove(id: number) {
-//     return `This action removes a #${id} geoServicio`;
-//   }
-// }
-
-
-// Contenido para reemplazar completamente el archivo existente
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { CreateGeoServicioDto } from './dto/create-geo_servicio.dto';
+import { promises } from 'dns';
 
 @Injectable()
 export class ServiciosService {
@@ -37,12 +9,22 @@ export class ServiciosService {
     private readonly entityManager: EntityManager,
   ) {}
 
+
+  async findAllServices(): Promise<CreateGeoServicioDto[]> {
+    const query = `CALL todosLosServicios();`;
+
+    try {
+      const result = await this.entityManager.query(query);
+      return result[0];
+    } catch (error) {
+      console.error('Error al ejecutar el procedimiento almacenado "todosLosServicios":', error);
+      throw new InternalServerErrorException('Ocurrió un error al buscar todos los servicios.');
+    }
+  }
+
   async findServiciosByClienteId(idCliente: number): Promise<CreateGeoServicioDto[]> {
     
-    // ===== INICIO DE LA CONSULTA DEFINITIVA (Basada en tu Navicat) =====
-    // Esta es la consulta que funciona en tu base de datos.
-    // He omitido el JOIN a 'catalogo_tecnicos' porque no se usa ningún
-    // campo de esa tabla en el SELECT, pero la lógica principal es idéntica.
+
     const query = `
       SELECT 
           sq.idServicioEquipo, 
@@ -68,7 +50,6 @@ export class ServiciosService {
       WHERE 
           ec.idCliente = ?;
     `;
-    // ===== FIN DE LA CONSULTA DEFINITIVA =====
 
     try {
       const servicios = await this.entityManager.query(query, [idCliente]);
