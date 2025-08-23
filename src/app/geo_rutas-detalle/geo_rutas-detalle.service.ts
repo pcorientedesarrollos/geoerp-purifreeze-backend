@@ -27,12 +27,17 @@ export class GeoRutasDetalleService {
     return results || [];
   }
 
+
+
    async obtenerCoordenadas(idRuta: number) {
       const query = `
-                  SELECT
+       SELECT
           grd.idRutaDetalle,
           c.nombreComercio,
           cd.direccion,
+          gs.status AS estatus,
+          grd.status,
+          grd.tipoServicio,
           TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', 1)) AS latitud,
           TRIM(SUBSTRING_INDEX(cd.nombreSucursal, ',', -1)) AS longitud
       FROM geo_rutas gr
@@ -41,6 +46,7 @@ export class GeoRutasDetalleService {
       JOIN equipos_cliente ec ON se.idContrato = ec.idEquipoCliente
       JOIN clientes c ON ec.idCliente = c.idcliente
       JOIN cliente_direcciones cd ON c.idcliente = cd.idCliente
+      JOIN geo_status gs ON grd.status = gs.idStatus
       WHERE gr.idRuta = ?
         AND cd.nombreSucursal REGEXP '^-?[0-9]+\\\.?[0-9]*[[:space:]]?,[[:space:]]?-?[0-9]+\\\.?[0-9]*$'
       GROUP BY c.nombreComercio, cd.direccion, latitud, longitud`;  

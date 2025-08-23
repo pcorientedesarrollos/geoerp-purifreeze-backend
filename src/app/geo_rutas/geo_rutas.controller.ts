@@ -10,6 +10,11 @@ import { UpdateGeoRutaDto } from './dto/update-geo_ruta.dto';
 export class GeoRutasController {
   constructor(private readonly geoRutasService: GeoRutasService) {}
 
+  @Get('resumen')
+  getResumenRutas() {
+    return this.geoRutasService.obtenerResumenRutas();
+  }
+  
   @Post()
   create(@Body() createGeoRutaDto: CreateGeoRutaDto) {
     return this.geoRutasService.create(createGeoRutaDto);
@@ -51,9 +56,8 @@ export class GeoRutasController {
   }
 
 
-    @Get('resumen')
-  getResumenRutas() {
-    return this.geoRutasService.obtenerResumenRutas(); 
-  }
+ 
+
+  
 
 }

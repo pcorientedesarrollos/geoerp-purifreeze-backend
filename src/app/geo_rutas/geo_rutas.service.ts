@@ -318,17 +318,16 @@ export class GeoRutasService {
           gr.idEstatus,
           u.usuario,
           gut.nombreUnidad,
-          gr.fecha_hora,
+          gr.fecha_hora, 
           gs.status AS nombreEstatus
         FROM geo_rutas gr
         LEFT JOIN usuarios u ON u.idUsuario = gr.idUsuario
         LEFT JOIN geo_unidadTransporte gut ON gut.idUnidadTransporte = gr.idUnidadTransporte
         LEFT JOIN geo_status gs ON gs.idStatus = gr.idEstatus
-        WHERE gr.idEstatus != ?
         ORDER BY gr.idRuta DESC
        `;
-    return await this.geoRutaRepository.query(query, [this.ESTATUS_ELIMINADA]);
-  }
+      return await this.geoRutaRepository.query(query);  
+}
 
 
 
