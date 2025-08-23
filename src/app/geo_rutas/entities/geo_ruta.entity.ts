@@ -1,5 +1,3 @@
-// COPIA Y PEGA ESTE CONTENIDO COMPLETO
-
 import { Expose } from 'class-transformer';
 import { GeoRutaDetalleEntity } from 'src/app/geo_rutas-detalle/entities/geo_rutas-detalle.entity';
 import { GeoUnidadesTransporte } from 'src/app/geo_unidades-transporte/entities/geo_unidades-transporte.entity';
@@ -17,6 +15,9 @@ export class GeoRutaEntity {
   @Expose() @Column({ name: 'idUnidadTransporte', type: 'int' }) idUnidadTransporte: number;
   @Expose() @CreateDateColumn({ name: 'fecha_hora', type: 'datetime' }) fechaHora: Date;
   @Expose() @Column({ name: 'kmInicial', type: 'varchar', length: 255, nullable: true }) kmInicial: string;
+
+  @Expose() @Column({ name: 'statusRuta', type: 'varchar', length: 255, nullable: true }) statusRuta: string;
+
   @Expose() @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true }) distanciaTotalKm: number;
   @Expose() @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true }) consumoEstimadoLitros: number;
   @Expose() @Column({ type: 'int', nullable: true }) duracionMinutos: number;
