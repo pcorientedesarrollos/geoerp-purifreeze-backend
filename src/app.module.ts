@@ -19,6 +19,8 @@ import { GeoServiciosModule } from './app/geo_servicios/geo_servicios.module';
 import { GeoStatusModule } from './app/geo_status/geo_status.module';
 import { EventsModule } from './app/events/events.module';
 
+import { DashboardModule } from './app/dashboard/dashboard.module';
+
 config();
 
 @Module({
@@ -52,6 +54,7 @@ config();
     GeoServiciosModule,
     GeoStatusModule,
     EventsModule,
+    DashboardModule,
   ],
 
   controllers: [AppController],
